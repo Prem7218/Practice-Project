@@ -1,0 +1,32 @@
+Coding Roadmap:
+
+1) Basics C, C++
+2) OOPS
+3) Basic DSA (Linear)
+4) Advance DSA (Hash-Based, Non-Linear)
+
+[*] Next Learn Web Design:
+1) HTML
+2) CSS
+3) Basic Java-Script
+
+[*] Next Learn Web Development:
+1] New Concepts HTML & CSS & CSS Frame-works...
+2] Advance Java-Script
+
+[*] Next Learning Frontend Development:
+1] MERN & MEAN Stack
+
+Basically MERN Stack:
+1) Mongo DB
+2) Express JS
+3) React JS
+4) Node JS
+
+Basically MEAN Stack:
+1) Mongo DB
+2) Express JS
+3) Angular JS
+4) Node JS
+
+More...
