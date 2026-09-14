@@ -1,0 +1,23 @@
+* { 
+    font-family: Arial, sans-serif;
+}
+
+.highlight { 
+    background-color: yellow;
+    color: red;
+} 
+
+#unique { 
+    color: darkgreen;
+    background-color: lightblue;
+} 
+
+h2 { 
+    text-align: center;
+    color: blue;
+} 
+
+p { 
+    font-size: 18px;
+    line-height: 1.5;
+}
