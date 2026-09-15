@@ -1,0 +1,22 @@
+
+1. Display → Enables flexbox by setting display: flex on a container.
+2. Main Axis & Cross Axis →
+3. The main axis is determined by flex-direction and defines the primary direction of content flow.
+4. The cross axis is perpendicular to the main axis and controls the secondary alignment.
+5. Flex Direction → Defines the main axis (row, row-reverse, column, column-reverse).
+6. Justify Content → Controls alignment along the main axis (flex-start, center, space-between, etc.).
+7. Align Items → Aligns items along the cross axis (stretch, center, flex-start, etc.).
+8. Flex Wrap → Defines whether items should wrap to a new line (nowrap, wrap, wrap-reverse).
+9. Align Self → Adjusts alignment of a single item within the flex container.
+10. Gap → Defines space between flex items.
+11. Flex Grow, Shrink & Basis → Controls item size behavior within a flex container.
+12. display: flex → Defines a flex container.
+13. flex-direction → Determines the main axis direction (row or column).
+14. justify-content → Aligns items along the main axis.
+15. align-items → Aligns items along the cross axis.
+16. align-content → Controls alignment for multiple flex lines.
+17. flex-wrap → Determines if items should wrap.
+18. gap → Controls spacing between items.
+19. flex → A shorthand for flex-grow, flex-shrink, and flex-basis.
+20. order → Defines the order of items in a flex container.
+21. align-self → Allows individual items to override align-items.

@@ -1,0 +1,30 @@
+
+/* 
+1) Descendant Selector (parent child) – Targets all elements inside a specified parent.
+
+2) Child Selector (parent > child) – Targets only the direct children of a specified parent.
+
+3) Attribute Selector ([attribute="value"]) – Targets elements based on specific attributes. 
+*/
+
+.descendant p {
+    color: blue;
+    font-style: italic;
+}
+
+.child > p {
+    color: red;
+    font-weight: bold;
+
+}
+
+input[type="text"] {
+    border: 2px solid green;
+    padding: 5px;
+}
+
+button[data-type="special"] {
+    background-color: yellow;
+    font-size: 18px;
+}
+

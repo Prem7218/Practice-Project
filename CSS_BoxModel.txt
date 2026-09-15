@@ -1,0 +1,13 @@
+You will focus on the following CSS Box Model properties:
+
+(1) Margin → Controls the space outside the element.
+
+(2) Padding → Controls the space inside the element, between content and border.
+
+(3) Border → Defines the outer boundary of an element.
+
+(4) Content → The actual content inside an element.
+
+(5) Box-Sizing → Determines how width and height are calculated (content-box vs. border-box).
+
+(6) Margin Collapse → Understand how adjacent margins interact.

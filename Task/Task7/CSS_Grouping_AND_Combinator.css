@@ -1,0 +1,27 @@
+ 
+/* 
+Grouping Selector (,) → Targets multiple elements with the same styles.
+
+Adjacent Sibling Selector (+) → Targets the immediate next sibling element.
+
+General Sibling Selector (~) → Targets all siblings after a specific element.
+*/
+
+h1, h2 {
+    color: darkblue;
+    text-align: center;
+}
+
+h1 + p {
+    color: green;
+    font-weight: bold;
+}
+
+h2 ~ p {
+    color: red;
+}
+
+button ~ span {
+    font-size: 18px;
+    color: purple;
+}

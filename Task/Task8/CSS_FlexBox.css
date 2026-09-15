@@ -1,0 +1,48 @@
+/* 
+    You will focus on the following Flexbox properties:
+
+1) display: flex → Defines a flex container.
+
+2) flex-direction → Determines the main axis direction (row or column).
+
+3) justify-content → Aligns items along the main axis.
+
+4) align-items → Aligns items along the cross axis.
+
+5) align-content → Controls alignment for multiple flex lines.
+
+6) flex-wrap → Determines if items should wrap.
+
+7) gap → Controls spacing between items.
+
+8) flex → A shorthand for flex-grow, flex-shrink, and flex-basis.
+
+9) order → Defines the order of items in a flex container.
+
+10) align-self → Allows individual items to override align-items.
+
+*/
+
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightgray;
+    height: 100vh;
+}
+
+.box-1 {
+    align-self: center;
+    background-color: lightblue;
+    height: 150px;
+    width: 150px;
+}
+
+.box-2 {
+    align-self: flex-end;
+    background-color: lightgreen;
+    height: 150px;
+    width: 150px;
+}

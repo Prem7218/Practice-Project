@@ -1,0 +1,21 @@
+
+[*] Positioning Property:
+
+[1]Static: Default. Element stays in the normal document flow.
+
+[2] Relative: Element is positioned relative to its normal position using top/right/bottom/left.
+
+[3] Absolute: Positioned relative to the nearest positioned ancestor. Removed from normal flow.
+
+[4] Fixed: Positioned relative to the viewport. Stays fixed during scroll.
+
+[5] Sticky: A hybrid of relative and fixed. Sticks at a defined position during scrolling.
+
+
+[*] Float Property:
+
+(1) Float: left: Element floats to the left.
+
+(2) Float: right: Element floats to the right.
+
+(3) Float: none: Default. Element does not float.

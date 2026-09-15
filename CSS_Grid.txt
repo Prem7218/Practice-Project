@@ -1,0 +1,48 @@
+
+1. Display → Enables grid by setting display: grid or display: inline-grid on a container.
+
+2. Grid Container & Grid Items → The parent element is the grid container, and its children are grid items.
+
+3. Grid Template Columns & Rows → Defines the number and size of columns and rows (grid-template-columns, grid-template-rows).
+
+4. Gap → Defines spacing between rows and columns (row-gap, column-gap, gap).
+
+5. Grid Lines, Tracks & Cells →
+
+6. Grid Lines: Invisible lines dividing the grid into sections.
+
+7. Grid Tracks: The space between two grid lines (rows and columns).
+
+8. Grid Cells: The intersection of a row and a column.
+
+9. Grid Area → Defines a specific area in the grid using grid-area.
+
+10. Justify & Align Content → Controls alignment of the entire grid within the container (justify-content, align-content).
+
+11. Justify & Align Items → Controls alignment of individual items inside grid cells (justify-items, align-items).
+
+12. Justify & Align Self → Adjusts alignment of a single item within its cell (justify-self, align-self).
+
+13. Grid Auto Flow → Defines how items are placed in the grid (row, column, dense).
+
+14. Auto-Fit & Auto-Fill → Helps in responsive design by adjusting grid tracks dynamically.
+
+15. Fractional Units (fr) & Minmax → Allows flexible sizing of grid items (fr units, minmax() function).
+
+16. display: grid → Defines a grid container.
+
+17. grid-template-columns → Defines the number and size of columns.
+
+18. grid-template-rows → Defines the number and size of rows.
+
+19. gap → Controls the spacing between rows and columns.
+
+20. justify-items → Aligns grid items along the inline axis.
+
+21. align-items → Aligns grid items along the block axis.
+
+22. place-items → A shorthand for justify-items and align-items.
+
+23. grid-column → Controls how many columns an item spans.
+
+24. grid-row → Controls how many rows an item spans.
