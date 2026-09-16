@@ -1,0 +1,12 @@
+They help websites store small pieces of data (like usernames, themes, or preferences) so that when you revisit a page, it remembers you.
+
+Web Storage allows web applications to store data inside a user's browser so that it can be used later , even after reloading or reopening the page.
+
+[*] There are three main types:
+
+(1) Local Storage: Stores data permanently until deleted manually.
+
+(2) Session Storage: Stores data temporarily for one browser session.
+
+(3) Cookies: Store small data that can also be shared with the server.
+
