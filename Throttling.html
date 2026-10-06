@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .scroll-indicator {
+            position: relative;
+            width: auto;
+            height: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Throttling Aplet</h1>
+        <div class="scroll-indicator">
+            Scroll Position: <span id="scroll-display">0</span>
+        </div>
+    </div>
+
+    <script src="Throttling.js" ></script>
+</body>
+</html>
