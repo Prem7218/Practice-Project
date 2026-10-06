@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div>
+        <div id="details" class="m-2 row">
+            <div class="col-3">
+                <label for="input">Choose expenseamount: </label>
+                <input id="input" type="number" class="form-control"/>
+            </div>
+
+            <div class="col-3">
+                <label for="search">Choose description: </label>
+                <div class="searchable-dropdown dropdown">
+                    <input
+                        width="auto"
+                        type="text" 
+                        class="form-control" 
+                        id="search" 
+                        value="sads" 
+                        data-bs-toggle="dropdown"
+                        autocomplete="off"
+                    />
+
+                    <ul class="dropdown-menu shadow-sm mt-1" id="dropdownMenu">
+                        <li><button class="dropdown-item" type="button">sads</button></li>
+                        <li><button class="dropdown-item" type="button">Petrol</button></li>
+                        <li><button class="dropdown-item" type="button">On vacation</button></li>
+                        <li><button class="dropdown-item" type="button">disel</button></li>
+                        <li><button class="dropdown-item" type="button">hallo</button></li>
+                        <li><button class="dropdown-item" type="button">1233</button></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-3">
+                <label for="categorySelect">Choose the category</label>
+                <select id="categorySelect" class="form-select">
+                    <option>fuel</option>
+                    <option>food</option>
+                    <option>electricity</option>
+                    <option>movie</option>
+                </select>
+            </div>
+
+            <div class="col-3">
+                <button class="see" onclick="expense()">Add Expense</button>
+            </div>
+        </div>
+
+        <ul class="output"></ul>
+        <p id="error" class="mx-auto text-center"></p>
+    </div>
+
+    <script src="ExpenseTracker.js"></script>
+</body>
+</html>
