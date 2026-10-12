@@ -9,7 +9,7 @@ const addorupdate = document.querySelector('.see');
 let id = null;
 
 const API_URL= "https://crudcrud.com/api";
-const code = 'ff0123f1b86d4e04b9a93f59740aa605';
+const code = 'b72ce64e8b7244ec9888beca274294dd';
 
 
 dropdownMenu.addEventListener('click', (event) => {
@@ -22,7 +22,7 @@ dropdownMenu.addEventListener('click', (event) => {
     }
 });
 
-(async function getUserFromLocalStorage() {
+window.addEventListener('DOMContentLoaded', async function getUserFromLocalStorage() {
 
     const obj = await axios.get(`${API_URL}/${code}/appointmentData`); 
     const expObj = obj.data;
@@ -41,7 +41,7 @@ dropdownMenu.addEventListener('click', (event) => {
         btns(li);
         ulList.append(li);
     }
-})();
+})
 
 function addBtn(check) {
 
