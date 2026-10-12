@@ -80,9 +80,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 ul.addEventListener('click', async (e) => {
 
-    const parentId = document.getElementsByClassName('user-list')[0].querySelector('p').id;
-
     if (e.target.classList.contains('delete-user')) {
+            const parentId = document.getElementsByClassName('user-list')[0].querySelector('p').id;
         await axios.delete(`${API_URL}/${code}/allUsers/${parentId}`);
     }
 });

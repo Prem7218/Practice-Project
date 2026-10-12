@@ -132,10 +132,9 @@ async function expense() {
 }
 
 ulList.addEventListener('click',async (e) => {
-
-    let parentId = document.getElementsByClassName('expense-list')[0]?.id;
     
     if(e.target.classList.contains('edit-exp')) {
+        let parentId = document.getElementsByClassName('expense-list')[0]?.id;
         const data = await axios.get(`${API_URL}/${code}/appointmentData/${parentId}`);
         const isEdit = document.getElementsByClassName('edit-exp');
 
@@ -151,6 +150,7 @@ ulList.addEventListener('click',async (e) => {
         addorupdate.textContent = 'Update';
     }
     else if(e.target.classList.contains('delete-exp')) {
+        let parentId = document.getElementsByClassName('expense-list')[0]?.id;
         
         await axios.delete(`${API_URL}/${code}/appointmentData/${parentId}`);
         error.textContent = 'expense deleting...';
