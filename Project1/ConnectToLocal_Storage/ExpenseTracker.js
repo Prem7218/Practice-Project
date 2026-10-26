@@ -14,7 +14,7 @@ dropdown.addEventListener('click', function(event) {
             bsDropdown.hide();
         }
     }
-});      
+});
 
 function addRemove() {
     let remove = document.createElement('button');
@@ -66,6 +66,7 @@ function expense() {
     }
 
     localStorage.setItem(category.value, JSON.stringify(obj));
+    sessionStorage.setItem(category.value, JSON.stringify(obj));
 
     let li = document.createElement('li');
 
@@ -85,7 +86,6 @@ function expense() {
     }
     else {
         const addExpense = document.getElementsByClassName('edit')[0];
-        let isId = addExpense.id;
         
         addExpense.textContent = 'Add Expense';
         category.disabled = false;

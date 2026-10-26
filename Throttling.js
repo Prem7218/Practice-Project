@@ -21,5 +21,5 @@ window.addEventListener('scroll', function () {
         div.textContent = scrollY.toFixed(0);
         box.style.backgroundColor = getRandomColor();
         scroll = false;
-    }, 10000);
+    }, 4000);
 });
