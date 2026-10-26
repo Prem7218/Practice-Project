@@ -1,8 +1,7 @@
 const http = require('http');
-const server = http.createServer((req, res) => {
+const fs = require('fs');
 
-    const url = req.url;
-    const method = req.method;
+const server = http.createServer((req, res) => {
 
     if(req.url == '/') {
         res.setHeader('Content-Type', 'text/html');
@@ -15,22 +14,37 @@ const server = http.createServer((req, res) => {
             </form>
         `);
     }
-    else if(req.url == "/message") {
-        res.setHeader('Content-type', 'text/html');
+    else if(req.url === "/message") {
+        res.setHeader('Content-Type', 'text/html');
 
-        let dataChunks = [];
+        let body = [];
 
         req.on('data', (chunks) => {
-            console.log(chunks);
-            dataChunks.push(chunks);
+            body.push(chunks);
         });
 
         req.on('end', () => {
-            let combinedBuffer = Buffer.concat(dataChunks);
-            console.log(combinedBuffer.toString());
-            let value = combinedBuffer.toString().split("=");
-            console.log(value);
+            let buffer = Buffer.concat(body);
+            let formData = buffer.toString();
+
+            const formValues = formData.split("=")[1];
+
+            fs.writeFile('formValues.txt', formValues, (error) => {
+                res.statusCode = 302;
+                res.setHeader('Location', '/');
+                res.end();
+            });
         });
+    }
+    else if(req.url === '/read') {
+        fs.readFile('formValues.txt', (error, data) => {
+            console.log(data.toString());
+            res.end(`
+                <h1>
+                    ${data.toString()}
+                </h1>
+            `);
+        })   
     }
 });
 
