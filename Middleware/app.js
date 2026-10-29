@@ -17,7 +17,7 @@ app.use("/welcome", (req, res, next) => {
 
 // Route handler
 app.get("/", (req, res) => {
-    res.send("<p></p>");
+    res.send("<p>Auth Complited...</p>");
 });
 
 app.get("/welcome", (req, res) => {
