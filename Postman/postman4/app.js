@@ -37,6 +37,7 @@ app.get('/users', (req, res) => {
 });
 
 app.get('welcome/:username', (req, res) => {
+    
     const { username } = req.params;
     const { role } = req.query;
 
