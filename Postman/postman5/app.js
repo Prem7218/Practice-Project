@@ -4,7 +4,6 @@ const PORT = 4000;
 
 app.use(express.json());
 
-
 const item = {
     categories: [],
     products: [],
