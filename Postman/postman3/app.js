@@ -36,7 +36,7 @@ app.post('/cats', (req, res) => {
         message: 'New categorie added!',
         categorie
     });
-}); 
+});
 
 // POST: Add a product
 app.post('/products', (req, res) => {
