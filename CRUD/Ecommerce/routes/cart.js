@@ -1,42 +1,8 @@
 const express = require('express');
+const { getUserCart, postUserCart } = require('../controller/cartController');
 const router = express.Router();
-const cart = {};
 
-router.get('/:userId', (req, res) => {
-    const userId = Number(req.params.userId);
-    
-    if(!cart[userId]) {
-        return res.status(404).send({
-            message: 'Cart not found for this user'
-        })
-    }
-
-    return res.status(200).json({
-        message: `Fetching cart for user with ID: ${userId}`,
-        cart: cart[userId]
-    });
-});
-
-router.post('/:userId', (req, res) => {
-    const userId = Number(req.params.userId);
-    const { productId } = req.body;
-
-    if(!Number.isInteger(productId) || productId <= 0) {
-        return res.status(400).json({
-            message: 'Please provide a valid product ID'
-        });
-    }
-
-    if(!cart[userId]) {
-        cart[userId] = [];
-    }
-
-    cart[userId].push(productId);
-
-    return res.status(201).json({
-        message: `Adding product to cart for user with ID: ${userId}`,
-        cart: cart[userId]
-    });
-});
+router.get('/:userId', getUserCart);
+router.post('/:userId', postUserCart);
 
 module.exports = router;
