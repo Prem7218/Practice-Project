@@ -16,6 +16,20 @@ const getAllProducts = () => {
     return products;
 }
 
+const postProducts = ({ name, price }) => {
+
+    const newProduct = {
+        id: products.length + 1,
+        name,
+        price
+    }
+
+    products.push(newProduct);
+    
+    return newProduct;
+}
+
 module.exports = {
-    getAllProducts
+    getAllProducts,
+    postProducts
 }
