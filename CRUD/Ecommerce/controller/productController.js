@@ -1,27 +1,27 @@
 
-const products = [];
+const productService = require('../service/productService');
 
 const allProducts = (req, res) => {
+    const products = productService.allProducts();
+
     return res.status(200).json({
-        message: `Fetching all products`,
-        totalproducts: products.length,
+        message: 'Fetching all products',
+        totalProducts: products.length,
         products
     });
 }
 
 const productById = (req, res) => {
-    const productId = Number(req.params.id);
-
-    const product = products.find(product => product.id === productId);
-
+    const product = productService.productById(req.params.id);
+    
     if(!product) {
-        return res.status(404).send({
+        return res.status(404).json({
             message: 'Product not found'
-        })
+        });
     }
 
     return res.status(200).json({
-        message: `Fetching product with ID: ${productId}`,
+        message: `Fetching product with ID: ${req.params.id}`,
         product
     });
 }
@@ -35,15 +35,10 @@ const postProduct = (req, res) => {
         });
     }
 
-    const product = {
-        id: products.length + 1,
-        name: name.trim()
-    }
-
-    products.push(user);
+    const product = productService.postProduct(name);
 
     return res.status(201).json({
-        message: 'Adding a new product',
+        message: 'Product created successfully',
         product
     });
 }
