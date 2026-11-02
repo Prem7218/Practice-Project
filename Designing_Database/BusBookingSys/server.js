@@ -52,7 +52,7 @@ connection.connect((error) => {
             return ;
         }
 
-        connection.query(queries[index], (error, result) => {
+        connection.query(queries[index], (error) => {
             if(error) {
                 console.log(error);
                 connection.end();
