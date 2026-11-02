@@ -22,12 +22,19 @@ const postStudnets = (req, res) => {
 
 const updateStudents = (req, res) => {
     const studentId = Number(req.params.id);
-    const { name } = req.body;
+    const { name, email } = req.body;
 
     if(!Number.isInteger(studentId) || studentId <= 0) {
         return sendErrorResp(res, {
             statusCode: 400,
             message: 'Invalid student ID'
+        });
+    }
+
+    if(typeof email !== 'string' || !email.trim()) {
+        return sendErrorResp(res, {
+            statusCode: 400,
+            message: 'Invalid student email id'
         });
     }
 
@@ -40,12 +47,18 @@ const updateStudents = (req, res) => {
 
     return studentServices.updateStudentName({ 
         name: name.trim(), 
+        email: email.trim(),
         studentId 
     }, res);
 };
 
+const deleteStudents = (req, res) => {
+    return studentServices.deleteStudentById({ studentId: Number(req.params.id) }, res);
+}
+
 module.exports = {
     loadStudnetPage,
     postStudnets,
-    updateStudents
+    updateStudents,
+    deleteStudents
 }

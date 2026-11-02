@@ -18,7 +18,7 @@ connection.connect((error) => {
     console.log('Database connected successfully!');
 
     const query = `
-        create table IF NOT EXISTS Students (
+        CREATE TABLE IF NOT EXISTS Students (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100),
             email VARCHAR(255)

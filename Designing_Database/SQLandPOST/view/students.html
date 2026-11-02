@@ -8,7 +8,7 @@
 <body>
     <main id="details">
         <h1 id="title">Student Details</h1>
-        <form id="form" onsubmit="handleFormSubmit(event)">
+        <form id="form">
             <div id="name">
                 <label id="student-name-label" for="student-name">Student name</label>
                 <input type="text" id="student-name" name="student_name" required>
@@ -25,7 +25,9 @@
             </div>
 
             <button id="add-student-button" type="submit">Add</button>
-            <button id="update-student-button" type="button" hidden>Update details</button>
+            <button class="update-stud" id="update-student-button" type="button" hidden>Update details</button>
+            <button class="delete-stud" id="delete-student-button" type="button" hidden>delete Student</button>
+            
             <button id="next-step-button" type="button" onclick="showUpdateForm()">Next</button>
             <button id="previous-step-button" type="button" onclick="showAddForm()" hidden>Previous</button>
         </form>
@@ -35,25 +37,51 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/students.js"></script>
     <script>
+        let currentStep = 1;
+
         function showUpdateForm() {
-            document.getElementById('email').hidden = true;
-            document.getElementById('student-email').required = false;
-            document.getElementById('student-id-field').hidden = false;
-            document.getElementById('student-id').required = true;
-            document.getElementById('add-student-button').hidden = true;
-            document.getElementById('update-student-button').hidden = false;
-            document.getElementById('next-step-button').hidden = true;
-            document.getElementById('previous-step-button').hidden = false;
+            if (currentStep === 1) {
+                document.getElementById('add-student-button').hidden = true;
+                document.getElementById('name').hidden = false;
+                document.getElementById('email').hidden = false;
+                document.getElementById('student-id-field').hidden = false;
+                document.getElementById('student-id').required = true;
+                document.getElementById('update-student-button').hidden = false;
+                document.getElementById('delete-student-button').hidden = true;
+                document.getElementById('previous-step-button').hidden = false;
+                currentStep = 2;
+                return;
+            }
+
+            if (currentStep === 2) {
+                document.getElementById('name').hidden = true;
+                document.getElementById('email').hidden = true;
+
+                studentName.required = false;
+                studentEmail.required = false;
+
+                document.getElementById('student-id-field').hidden = false;
+
+                document.getElementById('update-student-button').hidden = true;
+                document.getElementById('delete-student-button').hidden = false;
+
+                document.getElementById('next-step-button').hidden = true;
+
+                currentStep = 3;
+            }
         }
 
         function showAddForm() {
+            currentStep = 1;
+            document.getElementById('name').hidden = false;
             document.getElementById('email').hidden = false;
-            document.getElementById('student-email').required = true;
             document.getElementById('student-id-field').hidden = true;
             document.getElementById('student-id').required = false;
             document.getElementById('add-student-button').hidden = false;
             document.getElementById('update-student-button').hidden = true;
+            document.getElementById('delete-student-button').hidden = true;
             document.getElementById('next-step-button').hidden = false;
+            document.getElementById('next-step-button').textContent = 'Next';
             document.getElementById('previous-step-button').hidden = true;
         }
     </script>

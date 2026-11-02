@@ -16,5 +16,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/students', studentRoute);
 
 app.listen(PORT, () => {
-    console.log(`server is running on HOST: http://localhost:${PORT}`);
+    console.log(`server is running on HOST: http://localhost:${PORT}/students`);
 });
