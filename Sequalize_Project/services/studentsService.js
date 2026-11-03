@@ -3,7 +3,6 @@
 const Student = require('../models/studentsModel');
 const { sendSuccessResp, sendErrorResp } = require('../utils/response');
 
-
 const getAllStudents = async (res) => {
 
     try {
