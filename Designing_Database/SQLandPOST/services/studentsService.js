@@ -13,9 +13,7 @@ const postStudent = ({ name, email }, res) => {
             if(error) {
                 console.log(email);
                 console.log(error.message);
-                const resp = sendErrorResp(res, { statusCode: 400, message: 'Somthing Went Wrong!' });
-                db.end();
-                return resp;
+                return sendErrorResp(res, { statusCode: 400, message: 'Somthing Went Wrong!' });
             }
 
             console.log("Values has been inserted");
