@@ -1,6 +1,7 @@
 
 const express = require('express');
 const path = require('path');
+var cors = require('cors')
 
 const { sendErrorResp } = require('./utils/response');
 const db = require('./utils/sequelizeDB');
@@ -9,6 +10,8 @@ const appointmentRouter = require('./routes/appointmentRoute');
 
 const PORT = 3000;
 const app = express();
+
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
