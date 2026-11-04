@@ -5,9 +5,10 @@ const { sendErrorResp } = require('./utils/response');
 
 const studentsRouter = require('./routes/studentsRoute'); 
 const coursesRouter = require('./routes/coursesRoute');
+const subjectsRouter = require('./routes/subjectsRoute');
 
 // Import associations before syncing
-require('./modulesRelations/student_course');
+require('./modulesRelations/student_course_subject');
 
 const PORT = 3000;
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/students', studentsRouter);
 app.use('/courses', coursesRouter);
+app.use('/subjects', subjectsRouter);
 
 app.use((req, res) => {
     return sendErrorResp(

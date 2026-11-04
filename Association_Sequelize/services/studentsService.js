@@ -1,5 +1,5 @@
 
-const { Students, Courses } = require('../modulesRelations/student_course');
+const { Students, Courses, Subjects } = require('../modulesRelations/student_course_subject');
 const { 
     sendSuccessResp, 
     sendErrorResp 
@@ -13,6 +13,10 @@ const getAllStudents = async (res) => {
                 {
                     model: Courses,
                     as: 'courses'
+                },
+                {
+                    model: Subjects,
+                    as: 'subjects'
                 }
             ]
         });
@@ -39,7 +43,18 @@ const getAllStudents = async (res) => {
 const getStudentById = async ({ studentId }, res) => {
 
     try {
-        const student = await Students.findByPk(studentId);
+        const student = await Students.findByPk(studentId, {
+            include: [
+                {
+                    model: Courses,
+                    as: 'courses'
+                },
+                {
+                    model: Subjects,
+                    as: 'subjects'
+                }
+            ]
+        });
 
         if (!student) {
             return sendErrorResp(res, {

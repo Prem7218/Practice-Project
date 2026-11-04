@@ -1,5 +1,5 @@
 
-const { Students, Courses } = require('../modulesRelations/student_course');
+const { Students, Courses, Subjects } = require('../modulesRelations/student_course_subject');
 const { sendSuccessResp, sendErrorResp } = require('../utils/response');
 
 const getAllCourses = async (res) => {
@@ -9,11 +9,23 @@ const getAllCourses = async (res) => {
             include: [
                 {
                     model: Students,
-                    as: 'students',
+                    as: 'student',
                     attributes: ['studentId', 'name', 'email']
+                }, 
+                {
+                    model: Subjects,
+                    as: 'subjects',
+                    attributes: ['subId', 'studentId', 'courseId', 'subName']
                 }
             ]
         });
+
+        if (!courses) {
+            return sendErrorResp(res, {
+                statusCode: 404,
+                message: 'Student not found!'
+            });
+        }
 
         return sendSuccessResp(
             res,
