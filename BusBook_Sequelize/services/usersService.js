@@ -1,11 +1,16 @@
 
 const { sendSuccessResp, sendErrorResp } = require('../utils/response');
-const Users = require('../modules/usersModule');
+const { Users, Bookings } = require('../relation_modle/relation');
 
 const getAllUsers = async (res) => {
     
     try {
-        const users = await Users.findAll();
+        const users = await Users.findAll({
+            include: [{
+                model: Bookings,
+                as: 'bookings'
+            }]
+        });
 
         return sendSuccessResp(
             res, 
@@ -31,7 +36,12 @@ const getUserById = async ({ userId }, res) => {
 
     try {
 
-        const user = await Users.findByPk(userId);
+        const user = await Users.findByPk(userId, {
+            include: [{
+                model: Bookings,
+                as: 'bookings'
+            }]
+        });
 
         if(!user) {
             return sendErrorResp(res, { 

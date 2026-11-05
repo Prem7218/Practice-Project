@@ -10,6 +10,7 @@ const Payments = db.define('Payments', {
     bookingId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: true,
         references: {
             model: 'Bookings',
             key: 'bookingId'
@@ -38,7 +39,7 @@ const Payments = db.define('Payments', {
     },
     payDate: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.DATE
+        defaultValue: DataTypes.NOW
     }
 }, {
     tableName: 'Payments',

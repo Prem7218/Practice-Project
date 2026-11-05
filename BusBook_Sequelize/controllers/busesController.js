@@ -6,6 +6,23 @@ const allBuses = (req, res) => {
     return busesService.getAllBuses(res);
 } 
 
+const getBookingForSingleBus = (req, res) => {
+    const busId = Number(req.params.id);
+
+    if(!Number.isInteger(busId) || busId <= 0) {
+        return sendErrorResp(
+            res,
+            { 
+                statusCode: 400,
+                message: 'Please name & email correctly' 
+            },
+            false
+        )
+    }
+
+    return busesService.checkBookingForSingleBus({busId}, res);
+}
+
 const updateBus = (req, res) => {
     const id = Number(req.params.id);
     const { name, totalSeats } = req.body;
@@ -15,7 +32,7 @@ const updateBus = (req, res) => {
         !Number.isInteger(totalSeats) || totalSeats <= 0
     ) {
         return sendErrorResp(
-            res, 
+            res,
             { 
                 statusCode: 400,
                 message: 'Please name & email correctly' 
@@ -34,12 +51,28 @@ const updateBus = (req, res) => {
 }
 
 const postBus = (req, res) => {
-    const { name, totalSeats } = req.body;
+    const { name, totalSeats, availableSeats } = req.body;
+
+    if(
+        typeof name !== 'string' || !name.trim() ||
+        !Number.isInteger(totalSeats) || totalSeats <= 0 ||
+        !Number.isInteger(availableSeats) || availableSeats <= 0
+    ) {
+        return sendErrorResp(
+            res, 
+            { 
+                statusCode: 400,
+                message: 'Please name & email correctly' 
+            },
+            false
+        )
+    }
 
     return busesService.postBuses(
         {  
             name: name.trim(), 
-            totalSeats 
+            totalSeats ,
+            availableSeats
         }, res
     );
 }
@@ -47,5 +80,6 @@ const postBus = (req, res) => {
 module.exports = {
     allBuses,
     updateBus,
-    postBus
+    postBus,
+    getBookingForSingleBus
 }

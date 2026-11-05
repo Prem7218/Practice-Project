@@ -15,6 +15,10 @@ const Buses = db.define('Buses', {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 50
+    },
+    availableSeats: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     tableName: 'Buses',
