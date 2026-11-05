@@ -10,21 +10,13 @@ const Bookings = db.define('Bookings', {
     userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: 'Users',
-            key: 'userId'
-        }
     },
     busId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: 'Buses',
-            key: 'busId'
-        }
     },
     seatNumber: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     

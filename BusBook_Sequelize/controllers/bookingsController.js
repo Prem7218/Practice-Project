@@ -12,7 +12,7 @@ const addBooking = (req, res) => {
     if(
         !Number.isInteger(userId) || userId <= 0 ||
         !Number.isInteger(busId)  || busId <= 0 ||
-        typeof seatNumber !== 'string' || !seatNumber.trim()
+        !Number.isInteger(seatNumber) || seatNumber <= 0
     ) {
         return sendErrorResp(
             res,

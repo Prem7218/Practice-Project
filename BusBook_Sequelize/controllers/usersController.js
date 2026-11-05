@@ -3,6 +3,7 @@ const usersService = require('../services/usersService');
 const { sendErrorResp } = require('../utils/response');
 
 const allUsers = (req, res) => {
+    console.log('Hellos');
     return usersService.getAllUsers(res);
 }
 

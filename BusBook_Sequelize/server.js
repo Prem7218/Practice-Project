@@ -9,17 +9,24 @@ const paymentRoute = require('./routes/paymentsRoute');
 
 const { sendErrorResp } = require('./utils/response');
 
-const PORT = 3000;
+// Initialize associations before synchronization
+require('./relation_modle/relation');
+
+const PORT = 4600;
 const app = express();
 
+// Middleware
 app.use(express.json());
+
 // app.use(express.static(path.join(__dirname, 'public')))
 
+// Routes
 app.use('/users', userRouter);
 app.use('/buses', busRouter);
 app.use('/bookings', bookRoute);
-app.use('/payment', paymentRoute);
+app.use('/payments', paymentRoute);
 
+// 404 handler
 app.use((req, res) => {
     return sendErrorResp(
         res, 
@@ -30,12 +37,26 @@ app.use((req, res) => {
     );
 });
 
-db.sync({ force: false })
-  .then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server is Hosted: http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Database synchronization failed:', err);
-  });
+// Start server
+async function startServer() {
+    try {
+        await db.authenticate();
+
+        console.log('Database connected successfully!');
+
+        await db.sync({ alter: false });
+
+        console.log('Database synchronized successfully!');
+
+        app.listen(PORT, () => {
+            console.log(
+                `Server is hosted: http://localhost:${PORT}`
+            );
+        });
+
+    } catch (error) {
+        console.error('Server initialization failed:', error);
+    }
+}
+
+startServer();

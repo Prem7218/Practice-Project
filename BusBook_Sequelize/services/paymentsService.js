@@ -8,7 +8,8 @@ const showAllPayments = async (res) => {
     try {
         const payments = await Payments.findAll({
             include: [{
-                model: Bookings
+                model: Bookings,
+                as: 'booking'
             }]
         });
 
@@ -32,26 +33,46 @@ const showAllPayments = async (res) => {
     }
 }
 
-const postPayment = async ({ bookingId, amount, payMethod, payStatus, transactionId, payDate }, res) => {
+const postPayment = async ({
+        bookingId, 
+        amount, 
+        payMethod, 
+        payStatus, 
+        transactionId, 
+        payDate 
+    }, res) => {
 
     try {
+        const booking = await Bookings.findByPk(bookingId);
 
-        await Payments.create(
-            { bookingId, amount, payMethod, payStatus, transactionId, payDate }
-        );
+        if(!booking) {
+            return sendErrorResp(res, {
+                statusCode: 404,
+                message: 'Booking not found!'
+            });
+        }
+
+        const payment = await Payments.create({ 
+            bookingId, 
+            amount, 
+            payMethod, 
+            payStatus, 
+            transactionId, 
+            payDate 
+        });
 
         return sendSuccessResp(
             res, 
             200, 
             'Payment Added!', 
-            { bookingId, amount, payMethod, payStatus, transactionId, payDate }
+            payment
         );
 
     } catch(err) {
         console.error(err.message);
         return sendErrorResp(
             res, 
-            { 
+            {
                 statusCode: 500, 
                 message: 'Internal server error!' 
             },

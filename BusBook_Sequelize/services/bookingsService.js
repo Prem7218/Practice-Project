@@ -1,27 +1,26 @@
 
-const Buses = require('../modules/busesModule');
-const Bookings = require('../modules/bookingsModule');
-const Payments = require('../modules/payments');
+const { Payments, Users, Buses, Bookings } = require('../relation_modle/relation');
 const { sendSuccessResp, sendErrorResp } = require('../utils/response');
 const { literal, col, fn, Op } = require('sequelize');
-
-// One Bus can have multiple Bookings
-Buses.hasMany(Bookings, {
-    foreignKey: 'busId'
-});
-
-// One Booking belongs to one Bus
-Bookings.belongsTo(Buses, {
-    foreignKey: 'busId'
-});
 
 const showAllBookings = async (res) => {
     
     try {
         const bookings = await Bookings.findAll({
-            include: [{
-                model: Payments
-            }]
+            include: [
+                {
+                    model: Users,
+                    as: 'user'
+                },
+                {
+                    model: Buses,
+                    as: 'bus'
+                },
+                {
+                    model: Payments,
+                    as: 'payment'
+                }
+            ]
         });
 
         return sendSuccessResp(
@@ -47,20 +46,32 @@ const showAllBookings = async (res) => {
 const bookingSeats = async ({ seats }, res) => {
 
     try {
-        const booking = await Buses.findAll({
+        const requestedSeats = Number(seats);
+
+        if(
+            !Number.isInteger(requestedSeats) ||
+            requestedSeats <= 0
+        ) {
+            return sendErrorResp(res, {
+                statusCode: 400,
+                message: 'Invalid seat count!'
+            });
+        }
+
+        const buses = await Buses.findAll({
             attributes: [
                 'busId',
                 'name',
                 'totalSeats',
 
                 [
-                    fn('COUNT', col('Bookings.bookingId')),
+                    fn('COUNT', col('bookings.bookingId')),
                     'bookedSeats'
                 ],
 
                 [
                     literal(
-                        '`Buses`.`totalSeats` - COUNT(`Bookings`.`bookingId`)'
+                        '`Buses`.`totalSeats` - COUNT(`bookings`.`bookingId`)'
                     ),
                     'availableSeats'
                 ]
@@ -69,6 +80,7 @@ const bookingSeats = async ({ seats }, res) => {
             include: [
                 {
                     model: Bookings,
+                    as: 'bookings',
                     attributes: [],
                     required: false
                 }
@@ -81,7 +93,7 @@ const bookingSeats = async ({ seats }, res) => {
             ],
 
             having: literal(
-                `availableSeats > ${Number(seats)}`
+                `availableSeats >= ${1}`
             ),
 
             raw: true
@@ -91,36 +103,66 @@ const bookingSeats = async ({ seats }, res) => {
             res,
             200,
             'Available buses retrieved successfully',
-            booking
+            buses
         );
 
-    } catch(error) {
-        console.error(error);
+    } catch (error) {
+        console.error('Available Bus Error:', error);
 
-        return sendErrorResp(
-            res,
-            {
-                statusCode: 500,
-                message: 'Internal server error!'
-            },
-            false
-        );
+        return sendErrorResp(res, {
+            statusCode: 500,
+            message: 'Internal server error!'
+        });
     }
 };
 
 const addBooking = async ({ userId, busId, seatNumber }, res) => {
 
     try {
+        const user = await Users.findByPk(userId);
 
-        await Buses.create({
-            userId, busId, seatNumber
+        if(!user) {
+            return sendErrorResp(res, {
+                statusCode: 404,
+                message: 'User not found!'
+            });
+        }
+
+        const bus = await Buses.findByPk(busId);
+
+        if(!bus) {
+            return sendErrorResp(res, {
+                statusCode: 404,
+                message: 'Bus not found!'
+            });
+        }
+
+        const existingBooking = await Bookings.findOne({
+            where: {
+                busId,
+                seatNumber
+            }
+        });
+
+        // Check whether seat already booked
+        if (existingBooking) {
+            return sendErrorResp(res, {
+                statusCode: 409,
+                message: 'This seat is already booked!'
+            });
+        }
+
+        const booking = await Bookings.create({
+            userId, 
+            busId, 
+            seatNumber
         });
 
         return sendSuccessResp(
             res,
             201,
-            `new booking created: ${seatNumber}`, 
-            { userId, busId, seatNumber }
+            `Booking created successfully!`, 
+            booking
         );
 
     } catch(err) {
