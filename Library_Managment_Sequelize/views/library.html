@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management</title>
+    <style>
+        body { margin: 0; padding: 32px 16px; background: #f4f7f4; color: #24352a; font-family: Arial, sans-serif; }
+        main { max-width: 680px; margin: auto; }
+        h1 { color: #24613b; }
+        form, .library { margin-top: 24px; padding: 24px; border: 1px solid #dce5de; border-radius: 10px; background: white; }
+        label { display: block; margin: 0 0 6px; font-weight: bold; }
+        input { width: 100%; padding: 11px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #b9c9bd; border-radius: 5px; font: inherit; }
+        button { padding: 11px 18px; border: 0; border-radius: 5px; background: #287044; color: white; font: inherit; font-weight: bold; cursor: pointer; }
+        button:hover { background: #1d5935; }
+        #book-list { padding-left: 20px; }
+        #book-list li { padding: 10px 0; border-bottom: 1px solid #e6ece7; }
+        .author { color: #64736a; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>My Library</h1>
+        <p>Add a book by entering its name and author.</p>
+
+        <form id="book-form">
+            <label for="book-name">Book name</label>
+            <input id="book-name" name="name" type="text" value="JS-AI" placeholder="Enter book name" required>
+
+            <label for="book-author">Author</label>
+            <input id="book-author" name="author" type="text" value="JS-AI" placeholder="Enter author name" required>
+
+            <!-- <label for="book-image-file">Thumbnail or banner image (from your computer)</label>
+            <input id="book-image-file" name="imageFile" type="file" accept="image/*">
+
+            <label for="book-image-url">Or image link</label>
+            <input id="book-image-url" name="imageUrl" type="url" placeholder="https://example.com/image.jpg"> -->
+
+            <button id="submitBtn" type="submit">Add Book</button>
+        </form>
+
+        <!-- <section class="library" aria-labelledby="books-heading">
+            <h2 id="books-heading">Books</h2>
+            <p id="empty-message">No books added yet.</p>
+            <ul id="book-list" aria-live="polite"></ul>
+        </section> -->
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.20.0/axios.min.js" integrity="sha512-OVq+Gfa9PIjbTC0jWOccSFSp/vzkBQ5pMcbHQrNZLl+izmdFmusmAMlX4LT550ivvSnMXMEeG7CxEtjIz6Dn2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/bookadd.js"></script>
+    <!-- <script>
+        const form = document.getElementById('book-form');
+        const list = document.getElementById('book-list');
+        const emptyMessage = document.getElementById('empty-message');
+        const imageFileInput = form.elements.imageFile;
+        const imageUrlInput = form.elements.imageUrl;
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const name = form.elements.name.value.trim();
+            const author = form.elements.author.value.trim();
+            if (!name || !author) return;
+
+            const item = document.createElement('li');
+            const imageFile = imageFileInput.files[0];
+            const imageSource = imageFile ? URL.createObjectURL(imageFile) : imageUrlInput.value.trim();
+            if (imageSource) {
+                const image = document.createElement('img');
+                image.src = imageSource;
+                image.alt = `Cover image for ${name}`;
+                image.loading = 'lazy';
+                image.style.cssText = 'display:block;max-width:180px;max-height:240px;object-fit:cover;margin-bottom:8px;border-radius:4px;';
+                item.appendChild(image);
+            }
+            const title = document.createElement('strong');
+            const byline = document.createElement('span');
+            title.textContent = name;
+            byline.className = 'author';
+            byline.textContent = ` — ${author}`;
+            item.append(title, byline);
+            list.appendChild(item);
+
+            emptyMessage.hidden = true;
+            form.reset();
+            form.elements.name.focus();
+        });
+    </script> -->
+</body>
+</html>
