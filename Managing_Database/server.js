@@ -1,9 +1,11 @@
 
 const http = require('http');
 const express = require('express');
-const db = require('../practiceDB');
+const db = require('./utils/sequelizeDB');
 const app = express();
 const PORT = 4000;
+
+require('./relation_models/relations');
 
 const usersRouter = require('./routes/usersRoute');
 const busesRouter = require('./routes/busesRoute');

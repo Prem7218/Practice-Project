@@ -1,5 +1,5 @@
 
-const busesService = require('../services/busesService');
+const busesService = require('../services/sequelizeBusesService');
 const { sendErrorResp } = require('../utils/response');
 
 const busesMoreThanSeats = (req, res) => {

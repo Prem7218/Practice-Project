@@ -1,5 +1,5 @@
 
-const usersService = require('../services/usersService');
+const usersService = require('../services/sequelizeUsersService');
 const { sendErrorResp } = require('../utils/response');
 
 const allUsers = (req, res) => {
