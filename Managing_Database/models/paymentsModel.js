@@ -10,7 +10,11 @@ const Payments = db.define('Payments', {
     },
     BookingId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'Bookings',
+            key: 'BookingId'
+        }
     },
     amountPaid: {
         type: DataTypes.DECIMAL(10, 2),

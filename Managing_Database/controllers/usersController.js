@@ -1,6 +1,11 @@
 
 const usersService = require('../services/sequelizeUsersService');
 const { sendErrorResp } = require('../utils/response');
+const path = require('path');
+
+const loadUsersView = (req, res) => {
+    return res.sendFile(path.join(__dirname, '..', 'views', 'usersView.html'));
+}
 
 const allUsers = (req, res) => {
     return usersService.getAllUsers(res);
@@ -51,6 +56,7 @@ const updateUser = (req, res) => {
 }
 
 module.exports = {
+    loadUsersView,
     allUsers,
     postUser,
     updateUser,

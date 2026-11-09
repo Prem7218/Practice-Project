@@ -25,12 +25,12 @@ Bookings.belongsTo(Buses, {
 });
 
 Payments.hasOne(Bookings, {
-    foreignKey: 'bookingId',
+    foreignKey: 'BookingId',
     as: 'booking'
 });
 
-Bookings.hasOne(Payments, {
-    foreignKey: 'bookingId',
+Bookings.belongsTo(Payments, {
+    foreignKey: 'BookingId',
     as: 'payment'
 });
 
