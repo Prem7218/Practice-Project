@@ -1,6 +1,4 @@
 
-const http = require('http');
-
 const express = require('express');
 const db = require('./utils/sequelizeDB');
 
@@ -15,10 +13,12 @@ require('./relation_models/relations');
 
 const usersRouter = require('./routes/usersRoute');
 const busesRouter = require('./routes/busesRoute');
+const bookingsRouter = require('./routes/bookingsRoute');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
+app.use('/', bookingsRouter);
 app.use('/users', usersRouter);
 app.use('/buses', busesRouter);
 
