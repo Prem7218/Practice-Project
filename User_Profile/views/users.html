@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Information</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem 1rem;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        main {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 { margin-top: 0; }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        label { display: grid; gap: 0.4rem; font-weight: 600; }
+        input, textarea, button { box-sizing: border-box; font: inherit; }
+        input, textarea {
+            width: 100%;
+            padding: 0.65rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+        }
+
+        .wide { grid-column: 1 / -1; }
+        .search-form {
+            grid-template-columns: minmax(0, 1fr) auto;
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            grid-column: 1 / -1;
+            padding: 0.75rem;
+            border: 0;
+            border-radius: 5px;
+            background: #2563eb;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .search-form button { grid-column: auto; }
+
+        @media (max-width: 520px) {
+            form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Player Information</h1>
+
+        <form class="search-form" id="search-form" role="search">
+            <input
+                id="search"
+                type="search"
+                name="search"
+                aria-label="Search players"
+                placeholder="Search players"
+                required
+            >
+
+            <button id="search-btn" type="submit">
+                Search
+            </button>
+        </form>
+
+        <form action="/users" method="post">
+            <label for="name">Name
+                <input type="text" id="name" name="name" value="Prem" required>
+            </label>
+            <label for="dob">Date of Birth
+                <input type="date" id="dob" name="dob" value="2002-12-01" required>
+            </label>
+            <label for="imgUrl">Image URL
+                <input type="url" id="imgUrl" value="https://avatars.githubusercontent.com/u/161498035?v=4" name="imgUrl">
+            </label>
+            <label for="birthPlace">Birth Place
+                <input type="text" id="birthPlace" value="dhule" name="birthPlace">
+            </label>
+            <label for="career" class="wide">Career
+                <textarea id="career" name="career" rows="4"></textarea>
+            </label>
+            <label for="match">Matches
+                <input type="number" id="match" value="50" name="match" min="0">
+            </label>
+            <label for="score">Score
+                <input type="number" id="score" value="50" name="score" min="0">
+            </label>
+            <label for="fifties">Fifties
+                <input type="number" id="fifties" value="50" name="fifties" min="0">
+            </label>
+            <label for="centuries">Centuries
+                <input type="number" id="centuries" value="50" name="centuries" min="0">
+            </label>
+            <label for="wickets">Wickets
+                <input type="number" id="wickets" value="50" name="wickets" min="0">
+            </label>
+            <label for="average">Average
+                <input type="number" id="average" value="50" name="average" min="0" step="any">
+            </label>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.20.0/axios.min.js" integrity="sha512-OVq+Gfa9PIjbTC0jWOccSFSp/vzkBQ5pMcbHQrNZLl+izmdFmusmAMlX4LT550ivvSnMXMEeG7CxEtjIz6Dn2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/users.js"></script>
+</body>
+</html>
