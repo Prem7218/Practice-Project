@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Table Creator</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        font-family: Inter, Arial, sans-serif;
+        color: #172033;
+        background: #f4f6fb;
+    }
+    body { min-height: 100vh; background: #f4f6fb; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .dashboard { display: flex; min-height: 100vh; }
+    .sidebar {
+        width: 260px; flex: 0 0 260px; padding: 25px 16px;
+        color: #e5eaf4; background: #172033; display: flex;
+        flex-direction: column;
+    }
+    .brand { font-size: 20px; font-weight: 750; letter-spacing: -.4px; margin: 3px 8px 30px; }
+    .sidebar-label {
+        margin: 0 8px 12px; color: #91a0b8; font-size: 11px;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    }
+    #tablesList { display: grid; gap: 6px; }
+    .table-link {
+        width: 100%; border: 0; border-radius: 8px; padding: 11px 12px;
+        text-align: left; color: #cbd5e1; background: transparent;
+        transition: .18s ease; overflow-wrap: anywhere;
+    }
+    .table-link:hover, .table-link.active { color: white; background: #334155; }
+    .table-link::before { content: "▦"; margin-right: 10px; color: #93c5fd; }
+    .sidebar-empty { color: #94a3b8; padding: 8px; font-size: 13px; line-height: 1.5; }
+    .create-link {
+        margin-top: 18px; padding: 12px; border: 0; border-radius: 8px;
+        background: #2563eb; color: white; font-weight: 650; text-align: center;
+    }
+    .create-link:hover { background: #1d4ed8; }
+    .sidebar-footer { margin-top: auto; padding: 22px 8px 0; color: #718096; font-size: 12px; }
+    .main-content { flex: 1; min-width: 0; padding: 36px; }
+    .container, .table-viewer {
+        width: min(100%, 1050px); margin: 0 auto; padding: 30px;
+        background: white; border: 1px solid #e8edf5; border-radius: 14px;
+        box-shadow: 0 8px 30px rgba(22, 34, 55, .06);
+    }
+    h1 { font-size: 25px; letter-spacing: -.6px; }
+    .description { margin-top: 8px; color: #64748b; line-height: 1.5; }
+    .table-name { margin-top: 28px; max-width: 520px; }
+    label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 650; color: #334155; }
+    input[type="text"], select {
+        width: 100%; min-height: 42px; padding: 10px 12px;
+        border: 1px solid #cbd5e1; border-radius: 7px; outline: none;
+        background: white; color: #172033;
+    }
+    input:focus, select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px #3b82f61c; }
+    .columns-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 30px 0 14px; }
+    .columns-header h3 { font-size: 16px; }
+    .add-btn, .create-btn, .refresh-btn {
+        border: 0; border-radius: 7px; padding: 10px 15px; font-weight: 650;
+    }
+    .add-btn { color: #1d4ed8; background: #eff6ff; }
+    .add-btn:hover { background: #dbeafe; }
+    .column-row {
+        display: grid; grid-template-columns: minmax(150px, 1.2fr) minmax(130px, .8fr) minmax(190px, 1.2fr) 38px;
+        gap: 14px; align-items: end; padding: 16px; margin-bottom: 10px;
+        background: #f8fafc; border: 1px solid #e8edf5; border-radius: 9px;
+    }
+    .constraints { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; min-height: 42px; }
+    .constraints label { display: inline-flex; align-items: center; gap: 5px; margin: 0; font-size: 12px; font-weight: 550; }
+    .constraints input { accent-color: #2563eb; }
+    .remove-btn {
+        width: 36px; height: 40px; border: 1px solid #fecaca; border-radius: 7px;
+        background: #fff1f2; color: #be123c; font-size: 21px;
+    }
+    .remove-btn:hover { background: #ffe4e6; }
+    .create-btn { margin-top: 18px; min-width: 150px; color: white; background: #2563eb; }
+    .create-btn:hover { background: #1d4ed8; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    #message { margin-top: 16px; font-size: 14px; line-height: 1.5; }
+    #message.success { color: #15803d; }
+    #message.error { color: #b91c1c; }
+    .hidden { display: none !important; }
+    .viewer-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .refresh-btn { color: #334155; background: #eef2f7; white-space: nowrap; }
+    .refresh-btn:hover { background: #e2e8f0; }
+    .table-meta { margin-top: 6px; color: #64748b; font-size: 13px; }
+    .table-scroll { width: 100%; overflow-x: auto; margin-top: 22px; border: 1px solid #e2e8f0; border-radius: 9px; }
+    .data-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+    .data-table th, .data-table td {
+        padding: 13px 15px; border-bottom: 1px solid #e8edf5;
+        text-align: left; white-space: nowrap; font-size: 13px;
+    }
+    .data-table th { color: #334155; background: #f1f5f9; font-weight: 700; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .data-table tbody tr:hover { background: #f8fafc; }
+    .empty-message { padding: 30px 16px; color: #64748b; text-align: center; background: #f8fafc; border-radius: 8px; margin-top: 20px; }
+    .status-line { color: #64748b; font-size: 13px; margin-top: 15px; }
+    @media (max-width: 850px) {
+        .column-row { grid-template-columns: 1fr 1fr; }
+        .constraints { grid-column: 1 / 2; }
+        .remove-btn { grid-column: 2; grid-row: 2; justify-self: end; }
+    }
+    @media (max-width: 650px) {
+        .dashboard { flex-direction: column; }
+        .sidebar { width: 100%; flex-basis: auto; padding: 18px; }
+        .brand { margin-bottom: 18px; }
+        #tablesList { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+        .sidebar-footer { display: none; }
+        .main-content { padding: 16px; }
+        .container, .table-viewer { padding: 20px 16px; }
+        .column-row { grid-template-columns: 1fr; }
+        .constraints, .remove-btn { grid-column: auto; grid-row: auto; }
+        .remove-btn { justify-self: start; }
+        .viewer-header { flex-direction: column; }
+    }
+</style>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar">
+        <div class="brand">◈ My Database</div>
+        <div class="sidebar-label">Created tables</div>
+        <div id="tablesList"><p class="sidebar-empty">Loading tables...</p></div>
+        <button class="create-link" id="showCreate" type="button">＋ Create New Table</button>
+        <div class="sidebar-footer">Database workspace</div>
+    </aside>
+
+    <main class="main-content">
+        <section id="createSection">
+            <div class="container">
+                <h1>Create New Table</h1>
+                <p class="description">Define your table name, columns and constraints.</p>
+
+                <div class="table-name">
+                    <label for="tableName">Table Name</label>
+                    <input type="text" id="tableName" placeholder="e.g. Students" autocomplete="off">
+                </div>
+
+                <div class="columns-header">
+                    <h3>Table Columns</h3>
+                    <button class="add-btn" id="addColumn" type="button">＋ Add Column</button>
+                </div>
+
+                <div id="columnsContainer"></div>
+                <button class="create-btn" id="createTable" type="button">Create Table</button>
+                <div id="message" role="status" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <section id="tableViewer" class="table-viewer hidden">
+            <div class="viewer-header">
+                <div>
+                    <h1 id="selectedTableName">Table Name</h1>
+                    <p class="description">Table records</p>
+                    <p class="table-meta" id="tableMeta"></p>
+                </div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="refresh-btn" id="refreshTable" type="button">
+                        ↻ Refresh
+                    </button>
+
+                    <button class="create-btn" id="showInsertForm" type="button">
+                        ＋ Insert Row
+                    </button>
+                </div>
+            </div>
+
+            <div id="insertForm" class="hidden"
+                style="margin-top:22px; padding:20px; background:#f8fafc;
+                        border:1px solid #e2e8f0; border-radius:10px;">
+
+                <h3>Insert New Record</h3>
+
+                <form id="recordForm">
+                    <div id="recordFields"
+                        style="display:grid; gap:14px; margin-top:18px;">
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top:18px;">
+                        <button class="create-btn" type="submit">
+                            Save Record
+                        </button>
+
+                        <button class="refresh-btn" id="cancelInsert"
+                                type="button">
+                            Cancel
+                        </button>
+                    </div>
+
+                    <p id="insertMessage" style="margin-top:12px;"></p>
+                </form>
+            </div>
+            
+            <div id="tableContent"><p class="empty-message">Select a table from the sidebar.</p></div>
+        </section>
+    </main>
+</div>
+
+<script>
+    /*
+      API contract expected by this page:
+      GET  /tables
+        -> { status: true, tables: ["Students", "Users"] }
+        or { tables: [{ tableName: "Students" }, ...] }
+
+      POST /tables/create
+        -> existing create endpoint; receives { tableName, columns }
+
+      GET  /tables/:tableName/records
+        -> { status: true, columns: ["id", "name"], rows: [{ id: 1, name: "A" }] }
+        For an empty table, return columns plus rows: [].
+    */
+    const API = {
+        listTables: '/tables',
+        createTable: '/tables/create',
+        tableRecords: (name) => `/tables/${encodeURIComponent(name)}/records`
+    };
+
+    const tableNameInput = document.getElementById('tableName');
+    const columnsContainer = document.getElementById('columnsContainer');
+    const addColumnBtn = document.getElementById('addColumn');
+    const createTableBtn = document.getElementById('createTable');
+    const message = document.getElementById('message');
+    const tablesList = document.getElementById('tablesList');
+    const showCreateBtn = document.getElementById('showCreate');
+    const createSection = document.getElementById('createSection');
+    const tableViewer = document.getElementById('tableViewer');
+    const selectedTableName = document.getElementById('selectedTableName');
+    const tableContent = document.getElementById('tableContent');
+    const tableMeta = document.getElementById('tableMeta');
+    const refreshTableBtn = document.getElementById('refreshTable');
+
+    let activeTable = null;
+
+    async function requestJSON(url, options = {}) {
+        const response = await fetch(url, options);
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(result.message || `Request failed (${response.status})`);
+        }
+        if (result.status === false) {
+            throw new Error(result.message || 'The server could not complete the request.');
+        }
+        return result;
+    }
+
+    function showMessage(text, type = '') {
+        message.textContent = text;
+        message.className = type;
+    }
+
+    function showCreateView() {
+        activeTable = null;
+        tableViewer.classList.add('hidden');
+        createSection.classList.remove('hidden');
+        document.querySelectorAll('.table-link').forEach(button => button.classList.remove('active'));
+        showMessage('');
+    }
+
+    function showTableView() {
+        createSection.classList.add('hidden');
+        tableViewer.classList.remove('hidden');
+    }
+
+    function addColumn() {
+        const row = document.createElement('div');
+        row.className = 'column-row';
+        row.innerHTML = `
+            <div>
+                <label>Field Name</label>
+                <input type="text" class="field-name" placeholder="e.g. studentId" required>
+            </div>
+            <div>
+                <label>Data Type</label>
+                <select class="field-type">
+                    <option value="INTEGER">INTEGER</option>
+                    <option value="STRING">VARCHAR</option>
+                    <option value="TEXT">TEXT</option>
+                    <option value="BOOLEAN">BOOLEAN</option>
+                    <option value="DATE">DATE</option>
+                    <option value="FLOAT">FLOAT</option>
+                    <option value="DECIMAL">DECIMAL</option>
+                </select>
+            </div>
+            <div>
+                <label>Constraints</label>
+                <div class="constraints">
+                    <label><input type="checkbox" class="primary-key"> PK</label>
+                    <label><input type="checkbox" class="auto-increment"> AI</label>
+                    <label><input type="checkbox" class="not-null"> NOT NULL</label>
+                    <label><input type="checkbox" class="unique"> UNIQUE</label>
+                </div>
+            </div>
+            <button class="remove-btn" type="button" title="Remove column" aria-label="Remove column">×</button>
+        `;
+
+        row.querySelector('.remove-btn').addEventListener('click', () => {
+            if (columnsContainer.children.length === 1) {
+                showMessage('A table must have at least one column.', 'error');
+                return;
+            }
+            row.remove();
+        });
+
+        const pk = row.querySelector('.primary-key');
+        const ai = row.querySelector('.auto-increment');
+        ai.addEventListener('change', () => {
+            if (ai.checked) pk.checked = true;
+        });
+        pk.addEventListener('change', () => {
+            if (!pk.checked) ai.checked = false;
+        });
+
+        columnsContainer.appendChild(row);
+    }
+
+    function collectColumns() {
+        const rows = [...columnsContainer.querySelectorAll('.column-row')];
+        if (!rows.length) throw new Error('Add at least one column.');
+
+        const columns = rows.map(row => {
+            const name = row.querySelector('.field-name').value.trim();
+            const type = row.querySelector('.field-type').value;
+            const primaryKey = row.querySelector('.primary-key').checked;
+            const autoIncrement = row.querySelector('.auto-increment').checked;
+            const allowNull = !row.querySelector('.not-null').checked;
+            const unique = row.querySelector('.unique').checked;
+
+            if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(name)) {
+                throw new Error('Enter valid column names (letters, numbers and underscores; start with a letter).');
+            }
+            if (autoIncrement && type !== 'INTEGER') {
+                throw new Error(`Auto increment requires INTEGER: "${name}".`);
+            }
+            if (autoIncrement && !primaryKey) {
+                throw new Error(`Auto increment column "${name}" must be a primary key.`);
+            }
+            return { name, type, primaryKey, autoIncrement, allowNull, unique };
+        });
+
+        const names = columns.map(column => column.name.toLowerCase());
+        if (new Set(names).size !== names.length) throw new Error('Duplicate column names are not allowed.');
+        if (columns.filter(column => column.primaryKey).length > 1) {
+            throw new Error('Select only one primary key for this table.');
+        }
+        return columns;
+    }
+
+    async function loadTables() {
+        tablesList.innerHTML = '<p class="sidebar-empty">Loading tables...</p>';
+        try {
+            const result = await requestJSON(API.listTables);
+            const rawTables = Array.isArray(result) ? result : (result.tables || result.data || []);
+            const names = rawTables.map(item =>
+                typeof item === 'string' ? item : (item.tableName || item.table_name || item.name)
+            ).filter(Boolean);
+
+            tablesList.innerHTML = '';
+            if (!names.length) {
+                tablesList.innerHTML = '<p class="sidebar-empty">No tables created yet.</p>';
+                return;
+            }
+
+            names.forEach(name => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'table-link';
+                button.textContent = name;
+                button.dataset.table = name;
+                if (name === activeTable) button.classList.add('active');
+                button.addEventListener('click', () => loadTable(name));
+                tablesList.appendChild(button);
+            });
+        } catch (error) {
+            tablesList.innerHTML = '';
+            const errorText = document.createElement('p');
+            errorText.className = 'sidebar-empty';
+            errorText.textContent = `Could not load tables: ${error.message}`;
+            tablesList.appendChild(errorText);
+        }
+    }
+
+    function renderTable(columns, rows) {
+        if (!columns.length) {
+            tableContent.innerHTML = '<p class="empty-message">The server did not return column information for this table.</p>';
+            return;
+        }
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-scroll';
+        const table = document.createElement('table');
+        table.className = 'data-table';
+
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        columns.forEach(column => {
+            const th = document.createElement('th');
+            th.textContent = column;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+
+        const tbody = document.createElement('tbody');
+        rows.forEach(record => {
+            const tr = document.createElement('tr');
+            columns.forEach(column => {
+                const td = document.createElement('td');
+                const value = record[column];
+                td.textContent = value === null || value === undefined ? 'NULL' :
+                    (typeof value === 'object' ? JSON.stringify(value) : String(value));
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        table.append(thead, tbody);
+        wrapper.appendChild(table);
+        tableContent.replaceChildren(wrapper);
+
+        if (!rows.length) {
+            const empty = document.createElement('p');
+            empty.className = 'empty-message';
+            empty.textContent = 'This table is empty. Its columns are ready, but no records have been inserted yet.';
+            tableContent.appendChild(empty);
+        }
+    }
+
+    async function loadTable(name) {
+        activeTable = name;
+        showTableView();
+        selectedTableName.textContent = name;
+        tableMeta.textContent = 'Loading records...';
+        tableContent.innerHTML = '<p class="empty-message">Loading table data...</p>';
+        document.querySelectorAll('.table-link').forEach(button => {
+            button.classList.toggle('active', button.dataset.table === name);
+        });
+
+        try {
+            const result = await requestJSON(API.tableRecords(name));
+            const data = result.data && !Array.isArray(result.data) ? result.data : result;
+            const rows = data.rows || data.records || (Array.isArray(data.data) ? data.data : []);
+            let columns = data.columns || data.fields || [];
+
+            // If rows exist but columns were not separately supplied, infer column names.
+            if (columns.length && typeof columns[0] === 'object') {
+                columns = columns.map(column => column.name || column.fieldName || column.field);
+            }
+            if (!columns.length && rows.length) columns = Object.keys(rows[0]);
+
+            tableMeta.textContent = `${rows.length} record${rows.length === 1 ? '' : 's'}`;
+            renderTable(columns, rows);
+        } catch (error) {
+            tableMeta.textContent = 'Unable to load records';
+            tableContent.innerHTML = '';
+            const errorBox = document.createElement('p');
+            errorBox.className = 'empty-message';
+            errorBox.textContent = `Could not load "${name}": ${error.message}`;
+            tableContent.appendChild(errorBox);
+        }
+    }
+
+    addColumnBtn.addEventListener('click', addColumn);
+    showCreateBtn.addEventListener('click', showCreateView);
+    refreshTableBtn.addEventListener('click', () => {
+        if (activeTable) loadTable(activeTable);
+    });
+
+    createTableBtn.addEventListener('click', async () => {
+        try {
+            const name = tableNameInput.value.trim();
+            if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(name)) {
+                throw new Error('Enter a valid table name.');
+            }
+
+            const columns = collectColumns();
+            const payload = { tableName: name, columns };
+
+            createTableBtn.disabled = true;
+            createTableBtn.textContent = 'Creating...';
+            showMessage('');
+
+            const result = await requestJSON(API.createTable, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            showMessage(result.message || `Table "${name}" created successfully.`, 'success');
+            tableNameInput.value = '';
+            columnsContainer.innerHTML = '';
+            addColumn();
+
+            await loadTables();
+        } catch (error) {
+            showMessage(error.message, 'error');
+        } finally {
+            createTableBtn.disabled = false;
+            createTableBtn.textContent = 'Create Table';
+        }
+    });
+
+    // Initial page setup
+    addColumn();
+    loadTables();
+</script>
+</body>
+</html>

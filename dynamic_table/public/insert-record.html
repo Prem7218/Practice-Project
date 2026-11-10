@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Records</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            padding: 30px 15px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px #00000012;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        input:disabled {
+            background: #e5e7eb;
+            cursor: not-allowed;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .success {
+            display: block !important;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            display: block !important;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Insert Record</h1>
+
+        <p>Select a database table and enter its values.</p>
+
+        <div class="form-group">
+            <label for="tableSelect">Select Table</label>
+
+            <select id="tableSelect">
+                <option value="">Loading tables...</option>
+            </select>
+        </div>
+
+        <form id="recordForm">
+
+            <div id="fieldsContainer"></div>
+
+            <button type="submit" id="insertBtn" disabled>
+                Insert Record
+            </button>
+
+        </form>
+
+        <div id="message"></div>
+
+    </div>
+
+
+    <script>
+
+        const tableSelect = document.getElementById('tableSelect');
+
+        const fieldsContainer =
+            document.getElementById('fieldsContainer');
+
+        const recordForm = document.getElementById('recordForm');
+
+        const insertBtn = document.getElementById('insertBtn');
+
+        const message = document.getElementById('message');
+
+        let selectedTable = '';
+        let tableSchema = {};
+
+
+        // Display messages
+        function showMessage(text, type) {
+            message.className = type;
+            message.innerText = text;
+        }
+
+
+        // 1. Fetch all tables
+        async function loadTables() {
+
+            try {
+
+                const response = await fetch('/tables');
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message);
+                }
+
+                tableSelect.innerHTML =
+                    '<option value="">Select a table</option>';
+
+                result.tables.forEach(table => {
+
+                    const option = document.createElement('option');
+
+                    option.value = table;
+                    option.textContent = table;
+
+                    tableSelect.appendChild(option);
+
+                });
+
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        }
+
+
+        // 2. Generate input fields
+        async function loadTableStructure(tableName) {
+
+            fieldsContainer.innerHTML = '';
+            insertBtn.disabled = true;
+
+            try {
+
+                const response = await fetch(
+                    `/tables/${encodeURIComponent(tableName)}/structure`
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message);
+                }
+
+                tableSchema = result.columns;
+                selectedTable = tableName;
+
+                Object.entries(tableSchema).forEach(([name, details]) => {
+
+                    const group = document.createElement('div');
+
+                    group.className = 'form-group';
+
+                    const label = document.createElement('label');
+
+                    label.textContent =
+                        `${name} (${details.type})`;
+
+                    const type = details.type.toUpperCase();
+
+                    let input;
+
+                    if (type.includes('TINYINT') &&
+                        (type.includes('(1)') || type.includes('BOOLEAN'))) {
+
+                        input = document.createElement('select');
+
+                        input.innerHTML = `
+                            <option value="">Select value</option>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        `;
+
+                    } else {
+
+                        input = document.createElement('input');
+
+                        if (type.includes('INT')) {
+                            input.type = 'number';
+                            input.step = '1';
+
+                        } else if (
+                            type.includes('FLOAT') ||
+                            type.includes('DOUBLE') ||
+                            type.includes('DECIMAL')
+                        ) {
+                            input.type = 'number';
+                            input.step = 'any';
+
+                        } else if (type.includes('DATE')) {
+                            input.type = 'datetime-local';
+
+                        } else {
+                            input.type = 'text';
+                        }
+
+                    }
+
+                    input.name = name;
+                    input.dataset.type = type;
+
+                    input.placeholder = `Enter ${name}`;
+
+                    // Required fields
+                    input.required =
+                        details.allowNull === false &&
+                        details.defaultValue === null;
+
+                    group.appendChild(label);
+                    group.appendChild(input);
+
+                    fieldsContainer.appendChild(group);
+
+                });
+
+                insertBtn.disabled = false;
+
+            } catch (error) {
+
+                showMessage(error.message, 'error');
+
+            }
+        }
+
+
+        // 3. Select table
+        tableSelect.addEventListener('change', () => {
+
+            message.className = '';
+
+            const tableName = tableSelect.value;
+
+            if (!tableName) {
+                fieldsContainer.innerHTML = '';
+                insertBtn.disabled = true;
+                return;
+            }
+
+            loadTableStructure(tableName);
+
+        });
+
+
+        // 4. Insert record
+        recordForm.addEventListener('submit', async (e) => {
+
+            e.preventDefault();
+
+            try {
+
+                const inputs =
+                    fieldsContainer.querySelectorAll('input, select');
+
+                const record = {};
+
+                inputs.forEach(input => {
+
+                    if (input.value === '') return;
+
+                    const type = input.dataset.type;
+
+                    let value = input.value;
+
+                    if (
+                        type.includes('INT') ||
+                        type.includes('FLOAT') ||
+                        type.includes('DOUBLE') ||
+                        type.includes('DECIMAL')
+                    ) {
+                        value = Number(value);
+
+                        if (!Number.isFinite(value)) {
+                            throw new Error(`Invalid value for ${input.name}`);
+                        }
+
+                    } else if (
+                        type.includes('TINYINT') &&
+                        (type.includes('(1)') || type.includes('BOOLEAN'))
+                    ) {
+                        value = value === 'true';
+                    }
+
+                    record[input.name] = value;
+
+                });
+
+                if (Object.keys(record).length === 0) {
+                    throw new Error('Please enter at least one value.');
+                }
+
+                insertBtn.disabled = true;
+                insertBtn.innerText = 'Inserting...';
+
+                const response = await fetch(
+                    `/tables/${encodeURIComponent(selectedTable)}/insert`,
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+
+                        body: JSON.stringify(record)
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message);
+                }
+
+                showMessage(
+                    result.message,
+                    'success'
+                );
+
+                recordForm.reset();
+
+            } catch (error) {
+
+                showMessage(error.message, 'error');
+
+            } finally {
+
+                insertBtn.disabled = false;
+                insertBtn.innerText = 'Insert Record';
+
+            }
+
+        });
+
+
+        // Initialize
+        loadTables();
+
+    </script>
+
+</body>
+</html>
