@@ -24,14 +24,8 @@ async function getAllPosts() {
 
     try {
 
-        const response = await fetch(`${API_URL}/`);
-        const result = await response.json();
-
-        if (!response.ok || !result.status) {
-            throw new Error(result.message || 'Unable to fetch posts');
-        }
-
-        const posts = result.data || [];
+        const response = await axios.get(`${API_URL}`);
+        const posts = response.data.data || [];
 
         displayPosts(posts);
 
@@ -47,26 +41,24 @@ async function getAllPosts() {
 }
 
 // Display Posts
+
 function displayPosts(posts) {
 
     postsContainer.innerHTML = '';
 
     if (posts.length === 0) {
-
         postsContainer.innerHTML = `
             <div class="empty">
                 <h3>No Posts Yet!</h3>
                 <p>Create your first post.</p>
             </div>
         `;
-
         return;
     }
 
     posts.forEach(post => {
 
         const postElement = document.createElement('div');
-
         postElement.className = 'post';
 
         const image = document.createElement('img');
@@ -95,23 +87,72 @@ function displayPosts(posts) {
 
         content.append(postId, description, commentCount);
 
-        // Show comments if available
+        // Display Existing Comments
         if (post.comments && post.comments.length > 0) {
 
             const commentSection = document.createElement('div');
 
             post.comments.forEach(item => {
 
-                const comment = document.createElement('p');
+                const comment = document.createElement('span');
                 comment.textContent = `💬 ${item.comment}`;
 
                 commentSection.appendChild(comment);
 
+                const br = document.createElement('br');
+                commentSection.appendChild(br);
             });
 
             content.appendChild(commentSection);
-
         }
+
+        // Comment Input
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'comment-input';
+        input.placeholder = 'Write your comment...';
+
+        // Comment Button
+        const btn = document.createElement('button');
+        btn.classList.add('post-comment');
+        btn.textContent = 'Comment It!';
+
+        // Add Comment Event
+        btn.addEventListener('click', async () => {
+
+            const comment = input.value.trim();
+
+            if (!comment) {
+                alert('Please enter a comment!');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Posting...';
+
+            try {
+
+                await axios.post(`${API_URL}/${post.socailId}`,{ comment });
+
+                input.value = '';
+
+                // Reload posts with updated comments
+                await getAllPosts();
+
+            } catch (error) {
+
+                console.error('Comment Error:', error);
+                alert(error.message);
+
+            } finally {
+
+                btn.disabled = false;
+                btn.textContent = 'Comment It!';
+
+            }
+        });
+
+        content.append(input, btn);
 
         postElement.append(image, content);
 
@@ -143,20 +184,19 @@ postForm.addEventListener('submit', async (e) => {
         await axios.post(`${API_URL}/`, postData);
 
         showMessage('Post created successfully!', 'success');
-
+        
         postForm.reset();
 
         // Fetch latest posts from database
         await getAllPosts();
 
     } catch (error) {
-
+        
         console.error('Create Post Error:', error);
-
         showMessage(error.message, 'error');
 
     } finally {
-
+        
         submitBtn.disabled = false;
         submitBtn.innerText = 'Create Post';
     }
