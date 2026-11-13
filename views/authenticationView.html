@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in or sign up</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: #f3f5f9;
+            color: #172033;
+            font-family: Arial, sans-serif;
+        }
+        .auth-card {
+            width: min(100%, 420px);
+            padding: 32px;
+            background: #fff;
+            border: 1px solid #e3e7ef;
+            border-radius: 14px;
+            box-shadow: 0 12px 32px rgba(23, 32, 51, .08);
+        }
+        h1 { margin: 0 0 8px; font-size: 1.65rem; }
+        .intro { margin: 0 0 22px; color: #667085; line-height: 1.5; }
+        .mode-switch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            padding: 4px;
+            margin-bottom: 22px;
+            background: #f1f3f7;
+            border-radius: 9px;
+        }
+        .mode-switch button {
+            padding: 10px;
+            border: 0;
+            border-radius: 7px;
+            background: transparent;
+            color: #667085;
+            font: inherit;
+            cursor: pointer;
+        }
+        .mode-switch button[aria-pressed="true"] {
+            background: #fff;
+            color: #172033;
+            box-shadow: 0 1px 4px rgba(23, 32, 51, .12);
+        }
+        .field { margin-bottom: 17px; }
+        label { display: block; margin-bottom: 7px; font-size: .9rem; font-weight: 600; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5dae3;
+            border-radius: 8px;
+            font: inherit;
+        }
+        input:focus { outline: 3px solid rgba(66, 99, 235, .18); border-color: #4263eb; }
+        .submit-button {
+            width: 100%;
+            padding: 13px;
+            border: 0;
+            border-radius: 8px;
+            background: #4263eb;
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .submit-button:hover { background: #364fc7; }
+        @media (max-width: 480px) { .auth-card { padding: 26px 20px; } }
+    </style>
+</head>
+<body>
+    <main class="auth-card">
+        <h1 id="form-title">Create your account</h1>
+        <p class="intro" id="form-intro">Enter your details to get started.</p>
+
+        <div class="mode-switch" role="group" aria-label="Choose sign-up or sign-in">
+            <button type="button" id="signup-tab" aria-pressed="true">Sign up</button>
+            <button type="button" id="signin-tab" aria-pressed="false">Sign in</button>
+        </div>
+
+        <form id="form">
+            <div class="field" id="name-field">
+                <label for="name">Full name</label>
+                <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" required>
+            </div>
+            <div class="field" id="phone-field">
+                <label for="phone">Phone number</label>
+                <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="Your phone number" required>
+            </div>
+            <div class="field">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+            </div>
+            <button class="submit-button" id="submit-button" type="submit">Create account</button>
+        </form>
+
+        <center>
+            <p id="output"></p>
+        </center>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.20.0/axios.min.js" integrity="sha512-OVq+Gfa9PIjbTC0jWOccSFSp/vzkBQ5pMcbHQrNZLl+izmdFmusmAMlX4LT550ivvSnMXMEeG7CxEtjIz6Dn2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/authentication.js"></script>
+</body>
+</html>
