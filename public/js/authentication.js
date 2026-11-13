@@ -1,18 +1,23 @@
 
+const host = 'http://localhost:5000/auth';
 const form = document.getElementById('form');
-const signupTab = document.getElementById('signup-tab');
-const signinTab = document.getElementById('signin-tab');
-const nameField = document.getElementById('name');
-const email = document.getElementById('email');
-const phoneField = document.getElementById('phone');
-const nameInput = document.getElementById('name');
-const phoneInput = document.getElementById('phone');
+
 const title = document.getElementById('form-title');
 const intro = document.getElementById('form-intro');
-const submitButton = document.getElementById('submit-button');
-const output = document.getElementById('output');
 
-const host = 'http://localhost:5000/auth';
+const signupTab = document.getElementById('signup-tab');
+const signinTab = document.getElementById('signin-tab');
+
+const username = document.getElementById('name');
+const phone = document.getElementById('phone');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+
+const nameField = document.getElementById('name-field');
+const phoneField = document.getElementById('phone-field');
+
+const output = document.getElementById('output');
+const submitButton = document.getElementById('submit-button');
 
 form.addEventListener('submit',async (e) => {
     e.preventDefault();
@@ -25,9 +30,10 @@ form.addEventListener('submit',async (e) => {
         if(submitButton.textContent == 'Create account') {
 
             const user = {
-                name: nameField.value.trim(),
+                name: username.value.trim(),
                 email: email.value.trim(),
-                phone: phoneField.value.trim()
+                phone: phone.value.trim(),
+                password: password.value.trim()
             }
 
             resp = await axios.post(host, user);
@@ -35,7 +41,8 @@ form.addEventListener('submit',async (e) => {
         else {
             resp = await axios.get(host, {
                 params: {
-                    email: email.value.trim()
+                    email: email.value.trim(),
+                    password: password.value.trim()
                 }
             });
         }
@@ -56,10 +63,15 @@ form.addEventListener('submit',async (e) => {
 });
 
 function setMode(signingUp) {
+    username.hidden = !signingUp;
+    phone.hidden = !signingUp;
+
+    username.required = signingUp;
+    phone.required = signingUp;
+
     nameField.hidden = !signingUp;
     phoneField.hidden = !signingUp;
-    nameInput.required = signingUp;
-    phoneInput.required = signingUp;
+
     signupTab.setAttribute('aria-pressed', String(signingUp));
     signinTab.setAttribute('aria-pressed', String(!signingUp));
     title.textContent = signingUp ? 'Create your account' : 'Welcome back';
@@ -71,3 +83,5 @@ function setMode(signingUp) {
 
 signupTab.addEventListener('click', () => setMode(true));
 signinTab.addEventListener('click', () => setMode(false));
+
+setMode(false);

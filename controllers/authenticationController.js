@@ -9,15 +9,28 @@ const loadAuthPage = (req, res) => {
 
 const verifyUser = (req, res) => {
     const {
-        email
+        email,
+        password
     } = req.query;
 
-    if(typeof email!== 'string' || !email.trim()) {
+    if(typeof password !== 'string' || password.length < 8) { 
+        return sendErrorResp(res, 400, 'Password length minimum 8 characters');
+    }
+
+    if(typeof email !== 'string' || !email.trim()) {
         return sendErrorResp(res, 400, 'invalid email');
     }
 
+    const trimEmail= email.trim();
+    const trimPass = password.trim();
+
+    if(trimPass.length < 8) { 
+        return sendErrorResp(res, 400, 'Password length minimum 8 characters');
+    }
+
     return authService.getVerifyUser({ 
-        email: email.trim() 
+        email: trimEmail,
+        password: trimPass
     }, res);
 }
 
@@ -25,8 +38,13 @@ const registerUser = (req, res) => {
     const {
         name, 
         email,
-        phone
+        phone,
+        password
     } = req.body;
+
+    if(typeof password !== 'string' || password.length < 8) { 
+        return sendErrorResp(res, 400, 'Password length minimum 8 characters');
+    }
 
     if(
         typeof name !== 'string' || !name.trim() || 
@@ -36,10 +54,20 @@ const registerUser = (req, res) => {
         return sendErrorResp(res, 400, 'invalid name or email or phone number');;
     }
 
+    const trimName = name.trim();
+    const trimEmail= email.trim();
+    const trimPhone= phone.trim();
+    const trimPass = password.trim();
+
+    if(trimPass.length < 8) { 
+        return sendErrorResp(res, 400, 'Password length minimum 8 characters');
+    }
+
     return authService.getRegisterUser({
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim()
+        name: trimName,
+        email: trimEmail,
+        phone: trimPhone,
+        password: trimPass
     }, res);
 }
 

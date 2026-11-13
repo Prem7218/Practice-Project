@@ -15,6 +15,10 @@ const AuthCheck = db.define('AuthCheck', {
     phone: {
         type: DataTypes.STRING(10),
         allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     tableName: 'AuthCheck',

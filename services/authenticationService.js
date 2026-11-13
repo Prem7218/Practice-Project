@@ -2,12 +2,12 @@
 const { sendErrorResp, sendSuccessResp } = require('../utils/response');
 const AuthCheck = require('../models/authModel');
 
-const getVerifyUser =async ({ email }, res) => {
+const getVerifyUser =async ({ email, password }, res) => {
     
     try {
-        const user = await AuthCheck.findOne({
+        const user = await AuthCheck.findByPk(email, {
             where: {
-                email
+                password
             }
         });
 
@@ -22,13 +22,30 @@ const getVerifyUser =async ({ email }, res) => {
     }
 }
 
-const getRegisterUser =async ({ name, email, phone }, res) => {
+const getRegisterUser =async ({ name, email, phone, password }, res) => {
 
     try {
+
+        const user = await AuthCheck.findByPk(email);
+
+        if(user) {
+            const check = await AuthCheck.findOne({
+                where: {
+                    email,
+                    password
+                }
+            })
+
+            if(check) {
+                return sendSuccessResp(res, 200, 'User already present! use another email');
+            }
+        }
+        
         await AuthCheck.create({
             name,
             email, 
-            phone
+            phone,
+            password
         });
 
         return sendSuccessResp(res, 201, 'New Account Created!');
