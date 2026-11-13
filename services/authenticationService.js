@@ -18,14 +18,14 @@ const getVerifyUser =async ({ email }, res) => {
         return sendErrorResp(res, 404, 'User Not Found');
 
     } catch(error) {
-        return sendErrorResp(res, 500, error);
+        return sendErrorResp(res, 500, error.message);
     }
 }
 
 const getRegisterUser =async ({ name, email, phone }, res) => {
 
     try {
-        const newAccount = await AuthCheck.create({
+        await AuthCheck.create({
             name,
             email, 
             phone
@@ -34,7 +34,7 @@ const getRegisterUser =async ({ name, email, phone }, res) => {
         return sendSuccessResp(res, 201, 'New Account Created!');
 
     } catch(error) {
-        return sendErrorResp(res, 500, error);
+        return sendErrorResp(res, 500, error.message);
     }
 }
 

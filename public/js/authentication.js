@@ -2,14 +2,14 @@
 const form = document.getElementById('form');
 const signupTab = document.getElementById('signup-tab');
 const signinTab = document.getElementById('signin-tab');
-const nameField = document.getElementById('name-field');
-const phoneField = document.getElementById('phone-field');
+const nameField = document.getElementById('name');
+const email = document.getElementById('email');
+const phoneField = document.getElementById('phone');
 const nameInput = document.getElementById('name');
 const phoneInput = document.getElementById('phone');
 const title = document.getElementById('form-title');
 const intro = document.getElementById('form-intro');
 const submitButton = document.getElementById('submit-button');
-const email = document.getElementById('email');
 const output = document.getElementById('output');
 
 const host = 'http://localhost:5000/auth';
@@ -18,8 +18,10 @@ form.addEventListener('submit',async (e) => {
     e.preventDefault();
 
     submitButton.disabled = true;
+    let resp = null;
 
     try {
+
         if(submitButton.textContent == 'Create account') {
 
             const user = {
@@ -28,24 +30,28 @@ form.addEventListener('submit',async (e) => {
                 phone: phoneField.value.trim()
             }
 
-            const resp = await axios.post(host, user);
-
-            console.log(resp.data)
+            resp = await axios.post(host, user);
         }
         else {
-            const resp = await axios.get(host, {
+            resp = await axios.get(host, {
                 params: {
                     email: email.value.trim()
                 }
             });
-
-            console.log(resp);
         }
+
+        output.innerText = resp.data?.message;
+
     } catch(error) {
-        console.log(error.message);
+        console.log(error);
+        output.innerText = error.message;
     }
     finally {
         submitButton.disabled = false;
+        
+        setTimeout(() => {
+            output.textContent = '';
+        }, 5000);
     }
 });
 
