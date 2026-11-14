@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: #f3f6fb;
+            color: #1f2937;
+            font-family: Arial, sans-serif;
+        }
+
+        .expense-card {
+            width: min(100%, 480px);
+            padding: 32px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(31, 41, 55, 0.1);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 1.75rem;
+        }
+
+        .intro {
+            margin: 0 0 24px;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: 2px solid #bfdbfe;
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <main class="expense-card">
+        <h1>Add an expense</h1>
+        <p class="intro">Enter the details of your expense below.</p>
+
+        <form id="form">
+            <div class="form-group">
+                <label for="expense">Expense amount</label>
+                <input type="number" id="expense" name="expense" min="0.01" step="0.01" placeholder="0.00" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="What was this expense for?" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="food">Food</option>
+                    <option value="transport">Transportation</option>
+                    <option value="housing">Housing</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="health">Health</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <button id="submitBtn" type="submit">Add Expense</button>
+        </form>
+
+        <center>
+            <p id="message"></p>
+        </center>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.20.0/axios.min.js" integrity="sha512-OVq+Gfa9PIjbTC0jWOccSFSp/vzkBQ5pMcbHQrNZLl+izmdFmusmAMlX4LT550ivvSnMXMEeG7CxEtjIz6Dn2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/expense.js"></script>
+</body>
+</html>

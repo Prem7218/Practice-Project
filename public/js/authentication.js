@@ -48,6 +48,7 @@ form.addEventListener('submit',async (e) => {
         }
 
         output.innerText = resp.data?.message;
+        console.log('Resp: ', resp.data.data.userId);
 
     } catch(error) {
         console.log(error);
@@ -59,6 +60,14 @@ form.addEventListener('submit',async (e) => {
         setTimeout(() => {
             output.textContent = '';
         }, 5000);
+
+        if(
+            resp.status === 200 ||
+            resp.status === 201
+        ) {
+            sessionStorage.setItem("user", resp.data.data.userId);
+            window.location.href = 'http://localhost:5000/expense';
+        }
     }
 });
 

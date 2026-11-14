@@ -3,10 +3,15 @@ const { DataTypes } = require('sequelize');
 const db = require('../utils/sequelizeDB');
 
 const AuthCheck = db.define('AuthCheck', {
+    userId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     email: {
         type: DataTypes.STRING(255),
-        primaryKey: true,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     name: {
         type: DataTypes.STRING(100),
@@ -17,7 +22,7 @@ const AuthCheck = db.define('AuthCheck', {
         allowNull: false
     },
     password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false
     }
 }, {
