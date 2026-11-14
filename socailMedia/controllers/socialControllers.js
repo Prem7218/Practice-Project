@@ -35,14 +35,6 @@ const addPosts = (req, res) => {
         });
     }
 
-    try {
-        new URL(trimmedImgUrl);
-    } catch {
-        return res.status(400).json({
-            message: 'Please provide a valid image URL.'
-        });
-    }
-
     return socailService.addPosts({
         imgUrl: trimmedImgUrl,
         imgDisc: trimmedImgDisc
