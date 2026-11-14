@@ -1,21 +1,29 @@
 
 const { sendErrorResp, sendSuccessResp } = require('../utils/response');
+const bcrypt = require('bcrypt');
 const AuthCheck = require('../models/authModel');
 
 const getVerifyUser =async ({ email, password }, res) => {
     
     try {
-        const user = await AuthCheck.findByPk(email, {
-            where: {
-                password
-            }
+        const user = await AuthCheck.findOne({
+            where: { email }
         });
 
-        if(user) {
-            return sendSuccessResp(res, 200, 'User Found');
+        if(!user) {
+            return sendSuccessResp(res, 401, 'Invalid email or password');
         }
 
-        return sendErrorResp(res, 404, 'User Not Found');
+        const isPasswordMatch = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if(!isPasswordMatch) {
+            return sendSuccessResp(res, 401, 'Invalid email or password');
+        }
+
+        return sendErrorResp(res, 200, 'Login Successful!');
 
     } catch(error) {
         return sendErrorResp(res, 500, error.message);
@@ -26,31 +34,22 @@ const getRegisterUser =async ({ name, email, phone, password }, res) => {
 
     try {
 
-        const user = await AuthCheck.findByPk(email);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        if(user) {
-            const check = await AuthCheck.findOne({
-                where: {
-                    email,
-                    password
-                }
-            })
-
-            if(check) {
-                return sendSuccessResp(res, 200, 'User already present! use another email');
-            }
-        }
-        
-        await AuthCheck.create({
-            name,
-            email, 
+        const newUser = await AuthCheck.create({
+            name, 
+            email,
             phone,
-            password
+            password: hashedPassword
         });
 
         return sendSuccessResp(res, 201, 'New Account Created!');
 
     } catch(error) {
+        if(error.name === 'SequelizeUniqueConstraintError') {
+            return sendSuccessResp(res, 201, 'User already present! use another email');
+        }
+
         return sendErrorResp(res, 500, error.message);
     }
 }
