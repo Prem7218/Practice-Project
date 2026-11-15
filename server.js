@@ -1,5 +1,10 @@
 require('dotenv').config();
 
+// console.log({
+//     appIdLoaded: Boolean(process.env.CASHFREE_APP_ID),
+//     secretLoaded: Boolean(process.env.CASHFREE_SECRET_KEY)
+// });
+
 const express = require('express');
 const app = express();
 
@@ -8,6 +13,7 @@ const db = require('./utils/sequelizeDB');
 const { sendErrorResp } = require('./utils/response');
 const authRouter = require('./routes/authentication');
 const expenseRouter = require('./routes/expenseRoute');
+const paymentRouter = require('./routes/paymentsRoute');
 
 const PORT = 5000;
 const path = require('path');
@@ -16,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 app.use('/', authRouter);
+app.use('/payroute', paymentRouter);
 app.use('/expense', expenseRouter);
 
 app.use((req, res) => {
