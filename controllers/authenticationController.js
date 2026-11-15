@@ -11,7 +11,7 @@ const verifyUser = (req, res) => {
     const {
         email,
         password
-    } = req.query;
+    } = req.body;
 
     if(typeof password !== 'string' || password.length < 8) { 
         return sendErrorResp(res, 400, 'Password length minimum 8 characters');

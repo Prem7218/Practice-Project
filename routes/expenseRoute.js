@@ -8,7 +8,9 @@ router.get('/', expenseController.loadExpensePage);
 router.get('/data', expenseController.allExpense);
 router.post('/data', expenseController.postExpense);
 
-// router.put('/', expenseController);
-router.delete('/data', expenseController.deleteExpenses);
+router.get('/:id', expenseController.expenseById);
+router.put('/:id', expenseController.updateById);
+router.delete('/:id', expenseController.deleteExpenses);
+
 
 module.exports = router;

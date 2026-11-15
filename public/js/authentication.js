@@ -1,5 +1,6 @@
 
-const host = 'http://localhost:5000/auth';
+const host = 'http://localhost:5000';
+
 const form = document.getElementById('form');
 
 const title = document.getElementById('form-title');
@@ -36,38 +37,36 @@ form.addEventListener('submit',async (e) => {
                 password: password.value.trim()
             }
 
-            resp = await axios.post(host, user);
+            resp = await axios.post(`${host}/auth`, user);
         }
         else {
-            resp = await axios.get(host, {
-                params: {
-                    email: email.value.trim(),
-                    password: password.value.trim()
-                }
+            resp = await axios.post(`${host}/`, {
+                email: email.value.trim(),
+                password: password.value.trim()
             });
         }
 
-        output.innerText = resp.data?.message;
-        console.log('Resp: ', resp.data.data.userId);
+        output.innerText = resp.data.message;
+
+        const userId = resp.data.data?.token;
+
+        setTimeout(() => {
+            output.textContent = '';
+        }, 5000);
+
+        if (userId) {
+            sessionStorage.setItem('user', userId);
+
+            window.location.href = '/expense';
+        }
 
     } catch(error) {
         console.log(error);
         output.innerText = error.message;
     }
     finally {
-        submitButton.disabled = false;
-        
-        setTimeout(() => {
-            output.textContent = '';
-        }, 5000);
 
-        if(
-            resp.status === 200 ||
-            resp.status === 201
-        ) {
-            sessionStorage.setItem("user", resp.data.data.userId);
-            window.location.href = 'http://localhost:5000/expense';
-        }
+        submitButton.disabled = false;
     }
 });
 

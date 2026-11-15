@@ -16,16 +16,70 @@ const getAllExpense =async ({ userId }, res) => {
             return sendErrorResp(res, 404, 'User not found!');
         }
 
-        if(user.expenses.length === 0) {
-            return sendErrorResp(res, 200, 'No expenses found!', []);
-        }
-
         return sendSuccessResp(
             res, 
             200, 
             'User expenses fetched successfully!', 
             user.expenses
         );
+
+    } catch(error) {
+        return sendErrorResp(res, 500, error.message);
+    }
+}
+
+const getExpenseById =async ({ expenseId, userId }, res) => {
+
+    try {
+        const user = await AuthCheck.findByPk(userId);
+
+        if(!user) {
+            return sendErrorResp(res, 404, 'User not found!');
+        }
+
+        const expense = await Expense.findOne({
+            where: {
+                expenseId,
+                userId
+            }
+        });
+
+        if(!expense) {
+            return sendErrorResp(res, 404, 'Expense not found!');
+        }
+
+        return sendSuccessResp(res, 200, 'Expense found', expense);
+
+    } catch(error) {
+        return sendErrorResp(res, 500, error.message);
+    }
+}
+
+const getUpdateById = async ({ expenseId, userId, expense, expense_disc, category }, res) => {
+
+    try {
+        const user = await AuthCheck.findByPk(userId);
+
+        if(!user) {
+            return sendErrorResp(res, 404, 'User not found!');
+        }
+
+        const [updatedRows] = await Expense.update({
+            expense, expense_disc, category
+        }, {
+            where: {
+                expenseId,
+                userId
+            }
+        });
+
+        if (updatedRows === 0) {
+            return sendErrorResp(
+                res, 404, 'Expense not found!'
+            );
+        }
+
+        return sendSuccessResp(res, 200, 'Expense updated successfully!');        
 
     } catch(error) {
         return sendErrorResp(res, 500, error.message);
@@ -58,6 +112,12 @@ const postExpenses =async ({ expense, expense_disc, category, userId }, res) => 
 const deleteExpense =async ({ expenseId, userId }, res) => {
 
     try {
+        const user = await AuthCheck.findByPk(userId);
+
+        if(!user) {
+            return sendErrorResp(res, 404, 'User not found!');
+        }
+
         const expense = await Expense.findOne({
             where: {
                 expenseId,
@@ -81,5 +141,7 @@ const deleteExpense =async ({ expenseId, userId }, res) => {
 module.exports = {
     getAllExpense,
     postExpenses,
-    deleteExpense
+    deleteExpense,
+    getExpenseById,
+    getUpdateById
 }

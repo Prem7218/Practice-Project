@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 
@@ -22,14 +24,16 @@ app.use((req, res) => {
 
 db.authenticate()
   .then(() => {
-    db.sync({ alter: true });
     console.log('Database connected successfully!');
+    return db.sync({ alter: true });
   })
   .then(() => {
+    console.log('Tables synchronized!');
+
     app.listen(PORT, () => {
         console.log(`Server Hosted: http://localhost:${PORT}`);
     }); 
   })
   .catch((error) => {
-        console.log(error);
+      console.log('Database error:', error);
   });

@@ -85,6 +85,63 @@
         button:hover {
             background: #1d4ed8;
         }
+
+        /* Expense List */
+        #output {
+            list-style: none;
+            padding: 0;
+            margin: 25px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Individual List Item */
+        .web-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+
+        .web-link p {
+            margin: 0;
+            margin-right: auto;
+        }
+
+        /* Common Button Styling */
+        .web-link button {
+            width: auto;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Delete Button */
+        .delete-bookmark {
+            background: #dc2626;
+        }
+
+        .delete-bookmark:hover {
+            background: #b91c1c;
+        }
+
+        /* Edit Button */
+        .edit-bookmark {
+            background: #f59e0b;
+        }
+
+        .edit-bookmark:hover {
+            background: #d97706;
+        }
     </style>
 </head>
 <body>
@@ -117,12 +174,14 @@
                 </select>
             </div>
 
+            <center>
+                <p id="message"></p>
+            </center>
+
             <button id="submitBtn" type="submit">Add Expense</button>
         </form>
 
-        <center>
-            <p id="message"></p>
-        </center>
+        <ul id="output"></ul>
 
     </main>
 

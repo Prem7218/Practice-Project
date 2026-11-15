@@ -14,7 +14,7 @@ const getVerifyUser =async ({ email, password }, res) => {
         });
 
         if(!user) {
-            return sendSuccessResp(res, 401, 'Invalid email or password');
+            return sendErrorResp(res, 401, 'Invalid email or password');
         }
 
         const isPasswordMatch = await bcrypt.compare(
@@ -23,14 +23,20 @@ const getVerifyUser =async ({ email, password }, res) => {
         );
 
         if(!isPasswordMatch) {
-            return sendSuccessResp(res, 401, 'Invalid email or password');
+            return sendErrorResp(res, 401, 'Invalid email or password');
         }
+
+        const token = jwt.sign(
+            { userId: user.userId },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
 
         return sendSuccessResp(
             res,
             200,
             'Login successful!',
-            { userId: user.userId }
+            { token }
         );
 
     } catch(error) {
@@ -51,7 +57,13 @@ const getRegisterUser =async ({ name, email, phone, password }, res) => {
             password: hashedPassword
         });
 
-        return sendSuccessResp(res, 201, 'New Account Created!', { userId: newUser.userId });
+        const token = jwt.sign(
+            { userId: newUser.userId },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        return sendSuccessResp(res, 201, 'New Account Created!', { token });
 
     } catch(error) {
         if(error.name === 'SequelizeUniqueConstraintError') {
