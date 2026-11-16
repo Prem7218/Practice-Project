@@ -5,6 +5,7 @@ let id = null;
 
 const form = document.getElementById('form');
 const ul = document.getElementById('output');
+const usersList = document.getElementById('users');
 
 const expense = document.getElementById('expense');
 const description = document.getElementById('description');
@@ -39,12 +40,48 @@ async function loadContent() {
 
     try {
         ul.innerHTML = '';
+        usersList.innerHTML = '';
 
         const resp = await axios.get(`${host}/${end_point}`, {
             params: {
                 userId: sessionStorage.getItem('user')
             }
         });
+
+        const response = await axios.get(`${host}/auth/users`);
+        const users = response.data?.data;
+
+        for(let user of users) {
+
+            const li = createList();
+            li.classList.add('user-item');
+
+            const {
+                name, 
+                totalExpense
+            } = user;
+
+            const avatar = document.createElement('div');
+            avatar.classList.add('user-avatar');
+            avatar.textContent = name.charAt(0).toUpperCase();
+
+            const details = document.createElement('div');
+            details.classList.add('user-details');
+
+            const username = document.createElement('p');
+            username.classList.add('user-name');
+            username.textContent = name;
+
+            const total = document.createElement('p');
+            total.classList.add('user-total');
+            total.textContent =
+                `Total: ₹${Number(totalExpense).toLocaleString('en-IN')}`;
+
+            details.append(name, total);
+
+            li.append(avatar, details);
+            usersList.append(li);
+        }
 
         for(let item of resp.data?.data) {
 

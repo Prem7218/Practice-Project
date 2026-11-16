@@ -142,47 +142,215 @@
         .edit-bookmark:hover {
             background: #d97706;
         }
+
+
+        /* Main Dashboard */
+        .expense-card {
+            width: min(100%, 1100px);
+            padding: 30px;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 8px;
+        }
+
+        /* Two Column Layout */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        /* Left Sidebar */
+        .left-side {
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f9fafb;
+        }
+
+        .left-side h2,
+        .right-side h2,
+        .expense-list-section h2 {
+            margin: 0 0 8px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-intro {
+            margin: 0 0 18px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* Users List */
+        #users {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+
+        .user-details {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .user-details p {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-total {
+            margin-top: 5px !important;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Right Side Form */
+        .right-side {
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .right-side .intro {
+            margin-bottom: 22px;
+        }
+
+        /* Expense List Section */
+        .expense-list-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 700px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .expense-card {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <main class="expense-card">
-        <h1>Add an expense</h1>
-        <p class="intro">Enter the details of your expense below.</p>
+        <header class="page-header">
+            <h1>Expense Dashboard</h1>
+            <p class="intro">Manage expenses and track user spending.</p>
+        </header>
 
-        <form id="form">
-            <div class="form-group">
-                <label for="expense">Expense amount</label>
-                <input type="number" id="expense" name="expense" min="0.01" step="0.01" placeholder="0.00" required>
-            </div>
+        <div class="dashboard-layout">
 
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="What was this expense for?" required></textarea>
-            </div>
+            <!-- Left Side: Users List -->
+            <aside class="left-side">
+                <h2>Top Spenders</h2>
+                <p class="sidebar-intro">Users ranked by total expenses</p>
 
-            <div class="form-group">
-                <label for="category">Category</label>
-                <select id="category" name="category" required>
-                    <option value="" disabled selected>Select a category</option>
-                    <option value="food">Food</option>
-                    <option value="transport">Transportation</option>
-                    <option value="housing">Housing</option>
-                    <option value="utilities">Utilities</option>
-                    <option value="health">Health</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
+                <ul id="users">
+                    <!-- Users will be dynamically added here -->
+                </ul>
+            </aside>
 
-            <center>
-                <p id="message"></p>
-            </center>
+            <!-- Right Side: Expense Form -->
+            <section class="right-side">
+                <h2>Add an Expense</h2>
+                <p class="intro">Enter your expense details below.</p>
 
-            <button id="submitBtn" type="submit">Add Expense</button>
-        </form>
+                <form id="form">
 
-        <ul id="output"></ul>
+                    <div class="form-group">
+                        <label for="expense">Expense amount</label>
+                        <input
+                            type="number"
+                            id="expense"
+                            name="expense"
+                            min="0.01"
+                            step="0.01"
+                            placeholder="0.00"
+                            required
+                        >
+                    </div>
 
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            placeholder="What was this expense for?"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="food">Food</option>
+                            <option value="transport">Transportation</option>
+                            <option value="housing">Housing</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="health">Health</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <p id="message"></p>
+
+                    <button id="submitBtn" type="submit">
+                        Add Expense
+                    </button>
+
+                </form>
+            </section>
+
+        </div>
+
+        <!-- Expense List -->
+        <section class="expense-list-section">
+            <h2>Recent Expenses</h2>
+            <ul id="output"></ul>
+        </section>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.20.0/axios.min.js" integrity="sha512-OVq+Gfa9PIjbTC0jWOccSFSp/vzkBQ5pMcbHQrNZLl+izmdFmusmAMlX4LT550ivvSnMXMEeG7CxEtjIz6Dn2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

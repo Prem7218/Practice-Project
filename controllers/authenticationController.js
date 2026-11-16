@@ -7,6 +7,10 @@ const loadAuthPage = (req, res) => {
     return res.sendFile(path.join(__dirname, '..', 'views', 'authenticationView.html'));
 }
 
+const allUsers = (req, res) => {
+    return authService.getAllUsers(res);
+}
+
 const verifyUser = (req, res) => {
     const {
         email,
@@ -72,6 +76,7 @@ const registerUser = (req, res) => {
 }
 
 module.exports = {
+    allUsers,
     verifyUser,
     loadAuthPage,
     registerUser
