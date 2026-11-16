@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ask a Query</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 40px 20px;
+        background: #f3f4f6;
+        color: #1f2937;
+        font-family: Arial, sans-serif;
+      }
+      form {
+        width: min(100%, 480px);
+        margin: 0 auto;
+        padding: 32px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(31, 41, 55, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      input,
+      button {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        font: inherit;
+      }
+      input {
+        margin-bottom: 16px;
+        border: 1px solid #d1d5db;
+      }
+      button {
+        border: 0;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      #answer-box {
+        width: min(100%, 480px);
+        margin: 20px auto 0;
+        padding: 24px 32px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(31, 41, 55, 0.1);
+      }
+      #answer-box[hidden] {
+        display: none;
+      }
+      #answer-box h2 {
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+      }
+      #answer {
+        margin: 0;
+        line-height: 1.6;
+        white-space: pre-wrap;
+      }
+      @media (max-width: 520px) {
+        form,
+        #answer-box {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <form id="form">
+      <label for="query">What would you like to ask?</label>
+      <input
+        type="text"
+        id="query"
+        name="query"
+        placeholder="Enter your query"
+        required
+      />
+      <button id="submit" type="submit">Send</button>
+    </form>
+
+    <section id="answer-box" hidden>
+      <h2>Generated answer</h2>
+      <p id="answer"></p>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/ai.js"></script>
+  </body>
+</html>
