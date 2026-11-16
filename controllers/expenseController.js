@@ -16,9 +16,13 @@ const loadExpensePage = (req, res) => {
 
 const allExpense = (req, res) => {
     const decoded = decode(req.query.userId);
-
     return expenseService.getAllExpense({ userId: decoded.userId }, res);
 };
+
+const updateusersTotalExpense = (req, res) => {
+    const decoded = decode(req.body.userId);
+    return expenseService.updateUsersTotalExpense({ userId: decoded.userId }, res);
+}
 
 const expenseById = (req, res) => {
     const expenseId = Number(req.params.id);
@@ -144,5 +148,6 @@ module.exports = {
     postExpense,
     deleteExpenses,
     expenseById,
-    updateById
+    updateById,
+    updateusersTotalExpense
 }

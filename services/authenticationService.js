@@ -2,41 +2,57 @@
 const { sendErrorResp, sendSuccessResp } = require('../utils/response');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { fn, col, literal } = require('sequelize');
+// const { fn, col, literal } = require('sequelize');
 const { AuthCheck, Expense } = require('../models/relation_models/relation');
+const { literal } = require('sequelize');
 
-const getAllUsers =async (res) => {
+const getAllUsers = async (res) => {
 
     try {
         const users = await AuthCheck.findAll({
-            attributes: [
-                'userId',
-                'name',
-                [fn('COALESCE',
-                    fn('SUM', col('expenses.expense')),
-                    0
-                ), 'totalExpense']
-            ],
-            include: [
-                {
-                    model: Expense,
-                    as: 'expenses',
-                    attributes: [],
-                    required: false
-                }
-            ],
-            group: ['AuthCheck.userId'],
-            order: [
-                [literal('totalExpense'), 'DESC']
-            ],
-            raw: true
+            attributes: ['name', 'totalExpense'],
+            order: [['totalExpense', 'DESC']]
         });
 
         return sendSuccessResp(res, 200, 'Users fetched successfully', users);
+
     } catch(error) {
         return sendErrorResp(res, 500, error.message);
     }
 }
+
+// const getAllUsers =async (res) => {
+
+//     try {
+//         const users = await AuthCheck.findAll({
+//             attributes: [
+//                 'userId',
+//                 'name',
+//                 [fn('COALESCE',
+//                     fn('SUM', col('expenses.expense')),
+//                     0
+//                 ), 'totalExpense']
+//             ],
+//             include: [
+//                 {
+//                     model: Expense,
+//                     as: 'expenses',
+//                     attributes: [],
+//                     required: false
+//                 }
+//             ],
+//             group: ['AuthCheck.userId'],
+//             order: [
+//                 [literal('totalExpense'), 'DESC']
+//             ],
+//             raw: true
+//         });
+
+//         return sendSuccessResp(res, 200, 'Users fetched successfully', users);
+//     } catch(error) {
+//         return sendErrorResp(res, 500, error.message);
+//     }
+// }
 
 const getVerifyUser =async ({ email, password }, res) => {
     

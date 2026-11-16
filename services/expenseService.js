@@ -6,9 +6,11 @@ const getAllExpense =async ({ userId }, res) => {
 
     try {
         const user = await AuthCheck.findByPk(userId, {
+            attributes: [],
             include: [{
                 model: Expense,
-                as: 'expenses'
+                as: 'expenses',
+                attributes: ['expenseId', 'expense', 'expense_disc', 'category']
             }]
         });
 
@@ -19,8 +21,43 @@ const getAllExpense =async ({ userId }, res) => {
         return sendSuccessResp(
             res, 
             200, 
-            'User expenses fetched successfully!', 
+            'User expenses fetched successfully!',
             user.expenses
+        );
+
+    } catch(error) {
+        return sendErrorResp(res, 500, error.message);
+    }
+}
+
+const updateUsersTotalExpense =async ({ userId }, res) => {
+
+    try {
+        const usersExpense = await Expense.sum('expense', {
+            where: {
+                userId
+            }
+        });
+
+        const [updatedRows] = await AuthCheck.update({
+            totalExpense: usersExpense || 0
+        }, {
+            where: {
+                userId
+            }
+        });
+
+        if(!updatedRows) {
+            return sendErrorResp(res, 404, 'User not found');
+        }
+
+        return sendSuccessResp(
+            res,
+            200,
+            'User total expense updated successfully',
+            {
+                totalExpense: usersExpense || 0
+            }
         );
 
     } catch(error) {
@@ -143,5 +180,6 @@ module.exports = {
     postExpenses,
     deleteExpense,
     getExpenseById,
-    getUpdateById
+    getUpdateById,
+    updateUsersTotalExpense
 }

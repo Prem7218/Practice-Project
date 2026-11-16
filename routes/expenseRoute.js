@@ -7,6 +7,7 @@ router.get('/', expenseController.loadExpensePage);
 
 router.get('/data', expenseController.allExpense);
 router.post('/data', expenseController.postExpense);
+router.put('/data', expenseController.updateusersTotalExpense);
 
 router.get('/:id', expenseController.expenseById);
 router.put('/:id', expenseController.updateById);

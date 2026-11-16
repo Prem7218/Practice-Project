@@ -8,6 +8,11 @@ const AuthCheck = db.define('AuthCheck', {
         primaryKey: true,
         autoIncrement: true
     },
+    totalExpense: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0
+    },
     email: {
         type: DataTypes.STRING(255),
         allowNull: false,

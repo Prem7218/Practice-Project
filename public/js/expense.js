@@ -36,6 +36,12 @@ function addBtn(check) {
     return btn;
 }
 
+async function updateExpense() {
+    await axios.put(`${host}/${end_point}`, {
+        userId: sessionStorage.getItem('user')
+    });
+}
+
 async function loadContent() {
 
     try {
@@ -88,7 +94,7 @@ async function loadContent() {
             const { 
                 category, 
                 expense, 
-                expenseId, 
+                expenseId,
                 expense_disc,
             } = item;
 
@@ -102,6 +108,7 @@ async function loadContent() {
             li.append(addBtn('edit-bookmark'));
 
             ul.append(li);
+
         }
 
     } catch(error) {
@@ -168,6 +175,7 @@ form.addEventListener('submit',async (e) => {
         submit.textContent= 'Add Expense';
 
         await loadContent();
+        await updateExpense();
 
         setTimeout(() => {
             output.innerText = '';
@@ -209,6 +217,7 @@ ul.addEventListener('click', async (event) => {
             submit.textContent= 'Update';
 
             await loadContent();
+            await updateExpense();
         }
 
         if(event.target.classList.contains('delete-bookmark')) {
@@ -221,6 +230,7 @@ ul.addEventListener('click', async (event) => {
             });
 
             await loadContent();
+            await updateExpense();
         }
 
     } catch(error) {
