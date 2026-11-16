@@ -36,11 +36,11 @@ function addBtn(check) {
     return btn;
 }
 
-async function updateExpense() {
-    await axios.put(`${host}/${end_point}`, {
-        userId: sessionStorage.getItem('user')
-    });
-}
+// async function updateExpense() {
+//     await axios.put(`${host}/${end_point}`, {
+//         userId: sessionStorage.getItem('user')
+//     });
+// }
 
 async function loadContent() {
 
@@ -175,7 +175,7 @@ form.addEventListener('submit',async (e) => {
         submit.textContent= 'Add Expense';
 
         await loadContent();
-        await updateExpense();
+        // await updateExpense();
 
         setTimeout(() => {
             output.innerText = '';
@@ -217,7 +217,7 @@ ul.addEventListener('click', async (event) => {
             submit.textContent= 'Update';
 
             await loadContent();
-            await updateExpense();
+            // await updateExpense();
         }
 
         if(event.target.classList.contains('delete-bookmark')) {
@@ -230,7 +230,7 @@ ul.addEventListener('click', async (event) => {
             });
 
             await loadContent();
-            await updateExpense();
+            // await updateExpense();
         }
 
     } catch(error) {

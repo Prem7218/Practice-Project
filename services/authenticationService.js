@@ -3,8 +3,7 @@ const { sendErrorResp, sendSuccessResp } = require('../utils/response');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // const { fn, col, literal } = require('sequelize');
-const { AuthCheck, Expense } = require('../models/relation_models/relation');
-const { literal } = require('sequelize');
+const { AuthCheck } = require('../models/relation_models/relation');
 
 const getAllUsers = async (res) => {
 

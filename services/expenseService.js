@@ -116,6 +116,8 @@ const getUpdateById = async ({ expenseId, userId, expense, expense_disc, categor
             );
         }
 
+        await updateUsersTotalExpense({ userId }, res);
+
         return sendSuccessResp(res, 200, 'Expense updated successfully!');        
 
     } catch(error) {
@@ -138,6 +140,8 @@ const postExpenses =async ({ expense, expense_disc, category, userId }, res) => 
             expense_disc,
             category,
         });
+
+        await updateUsersTotalExpense({ userId }, res);
 
         return sendSuccessResp(res, 201, 'New expense added!', newExpense);
 
@@ -167,6 +171,7 @@ const deleteExpense =async ({ expenseId, userId }, res) => {
         }
 
         await expense.destroy();
+        await updateUsersTotalExpense({ userId }, res);
 
         return sendSuccessResp(res, 200, 'Expense deleted successfully!');
 
