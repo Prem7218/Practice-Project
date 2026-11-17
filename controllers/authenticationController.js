@@ -7,8 +7,28 @@ const loadAuthPage = (req, res) => {
     return res.sendFile(path.join(__dirname, '..', 'views', 'authenticationView.html'));
 }
 
+const loadUpdatePage = (req, res) => {
+    return res.sendFile(path.join(__dirname, '..', 'views', 'passwordUpdate.html'));
+}
+
 const allUsers = (req, res) => {
     return authService.getAllUsers(res);
+}
+
+const updatePassword = (req, res) => {
+    const { updatedPassword, email } = req.body;
+
+    if(
+        typeof updatedPassword !== 'string' || !updatedPassword.trim() ||
+        typeof email !== 'string' || !email.trim()
+    ) {
+        return sendErrorResp(res, 400, 'Invalid password or email');
+    }
+
+    return authService.getUpdatePassword({
+        updatedPassword: updatedPassword.trim(), 
+        email: email.trim()
+    }, res);
 }
 
 const verifyUser = (req, res) => {
@@ -79,5 +99,7 @@ module.exports = {
     allUsers,
     verifyUser,
     loadAuthPage,
-    registerUser
+    registerUser,
+    updatePassword,
+    loadUpdatePage
 }

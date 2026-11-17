@@ -2,7 +2,6 @@
 const { sendErrorResp, sendSuccessResp } = require('../utils/response');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const { fn, col, literal } = require('sequelize');
 const { AuthCheck } = require('../models/relation_models/relation');
 
 const getAllUsers = async (res) => {
@@ -20,38 +19,25 @@ const getAllUsers = async (res) => {
     }
 }
 
-// const getAllUsers =async (res) => {
+const getUpdatePassword =async ({ updatedPassword, email }, res) => {
 
-//     try {
-//         const users = await AuthCheck.findAll({
-//             attributes: [
-//                 'userId',
-//                 'name',
-//                 [fn('COALESCE',
-//                     fn('SUM', col('expenses.expense')),
-//                     0
-//                 ), 'totalExpense']
-//             ],
-//             include: [
-//                 {
-//                     model: Expense,
-//                     as: 'expenses',
-//                     attributes: [],
-//                     required: false
-//                 }
-//             ],
-//             group: ['AuthCheck.userId'],
-//             order: [
-//                 [literal('totalExpense'), 'DESC']
-//             ],
-//             raw: true
-//         });
+    try {
+        const hashedPassword = await bcrypt.hash(updatedPassword, 10);
 
-//         return sendSuccessResp(res, 200, 'Users fetched successfully', users);
-//     } catch(error) {
-//         return sendErrorResp(res, 500, error.message);
-//     }
-// }
+        await AuthCheck.update({
+            password: hashedPassword
+        }, {
+            where: {
+                email
+            }
+        });
+
+        return sendSuccessResp(res, 200, 'Password Updated Successfully');
+
+    } catch(error) {
+        return sendErrorResp(res, 500, error.message);
+    }
+}
 
 const getVerifyUser =async ({ email, password }, res) => {
     
@@ -126,5 +112,6 @@ const getRegisterUser =async ({ name, email, phone, password }, res) => {
 module.exports = {
     getAllUsers,
     getVerifyUser,
-    getRegisterUser
+    getRegisterUser,
+    getUpdatePassword
 }

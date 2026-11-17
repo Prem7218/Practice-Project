@@ -11,6 +11,7 @@ const { sendErrorResp } = require('./utils/response');
 const authRouter = require('./routes/authentication');
 const expenseRouter = require('./routes/expenseRoute');
 const paymentRouter = require('./routes/paymentsRoute');
+const mailRouter = require('./routes/mailRoute');
 
 const PORT = 5000;
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/', authRouter);
 app.use('/payroute', paymentRouter);
 app.use('/expense', expenseRouter);
+app.use('/mail', mailRouter);
 
 // 404 Handler
 app.use((req, res) => {

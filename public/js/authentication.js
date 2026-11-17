@@ -13,6 +13,7 @@ const username = document.getElementById('name');
 const phone = document.getElementById('phone');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
+const forget = document.getElementById('forget-password');
 
 const nameField = document.getElementById('name-field');
 const phoneField = document.getElementById('phone-field');
@@ -70,15 +71,20 @@ form.addEventListener('submit',async (e) => {
     }
 });
 
+forget.addEventListener('click', () => {
+    window.location.href = `${host}/mail`;
+});
+
 function setMode(signingUp) {
     username.hidden = !signingUp;
     phone.hidden = !signingUp;
 
     username.required = signingUp;
     phone.required = signingUp;
-
+    
     nameField.hidden = !signingUp;
     phoneField.hidden = !signingUp;
+    forget.hidden = signingUp;
 
     signupTab.setAttribute('aria-pressed', String(signingUp));
     signinTab.setAttribute('aria-pressed', String(!signingUp));
