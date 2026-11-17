@@ -1,5 +1,6 @@
 
 const { Cashfree } = require("cashfree-pg");
+const { default: db } = require("../utils/sequelizeDB");
 
 const cashfree = new Cashfree(
     Cashfree.SANDBOX,
@@ -13,7 +14,11 @@ const createOrder = async (
     customerID,
     customerPhone
 ) => {
+    let transactions;
+
     try {
+        transactions = await db.transaction();
+
         const expiryDate = new Date(Date.now() + 60 * 60 * 1000);
         const formattedExpiryDate = expiryDate.toISOString();
 
@@ -35,9 +40,11 @@ const createOrder = async (
 
         const response = await cashfree.PGCreateOrder(request);
 
+        await transactions.commit();
         return response.data;
 
     } catch(error) {
+        await transactions.rollback();
         console.log(`Error creating order: `, error.message);
     }
 };

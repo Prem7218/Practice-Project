@@ -1,4 +1,5 @@
 
+const db = require('../utils/sequelizeDB');
 const { sendErrorResp, sendSuccessResp } = require('../utils/response');
 const { Expense, AuthCheck } = require('../models/relation_models/relation');
 
@@ -32,12 +33,16 @@ const getAllExpense =async ({ userId }, res) => {
 
 const updateUsersTotalExpense =async ({ userId }, res) => {
 
+    let transactions;
+
     try {
+        transactions = await db.transaction();
+
         const usersExpense = await Expense.sum('expense', {
             where: {
                 userId
             }
-        });
+        }, {transactions});
 
         const [updatedRows] = await AuthCheck.update({
             totalExpense: usersExpense || 0
@@ -45,12 +50,14 @@ const updateUsersTotalExpense =async ({ userId }, res) => {
             where: {
                 userId
             }
-        });
+        }, {transactions});
 
         if(!updatedRows) {
+            await transactions.rollback();
             return sendErrorResp(res, 404, 'User not found');
         }
 
+        await transactions.commit();
         return sendSuccessResp(
             res,
             200,
@@ -61,6 +68,7 @@ const updateUsersTotalExpense =async ({ userId }, res) => {
         );
 
     } catch(error) {
+        await transactions.rollback();
         return sendErrorResp(res, 500, error.message);
     }
 }
@@ -94,10 +102,15 @@ const getExpenseById =async ({ expenseId, userId }, res) => {
 
 const getUpdateById = async ({ expenseId, userId, expense, expense_disc, category }, res) => {
 
+    let transactions;
+
     try {
-        const user = await AuthCheck.findByPk(userId);
+        transactions = await db.transaction();
+
+        const user = await AuthCheck.findByPk(userId, {transactions});
 
         if(!user) {
+            await transactions.rollback();
             return sendErrorResp(res, 404, 'User not found!');
         }
 
@@ -108,9 +121,10 @@ const getUpdateById = async ({ expenseId, userId, expense, expense_disc, categor
                 expenseId,
                 userId
             }
-        });
+        }, {transactions});
 
         if (updatedRows === 0) {
+            await transactions.rollback();
             return sendErrorResp(
                 res, 404, 'Expense not found!'
             );
@@ -118,19 +132,26 @@ const getUpdateById = async ({ expenseId, userId, expense, expense_disc, categor
 
         await updateUsersTotalExpense({ userId }, res);
 
+        await transactions.commit();
         return sendSuccessResp(res, 200, 'Expense updated successfully!');        
 
     } catch(error) {
+        await transactions.rollback();
         return sendErrorResp(res, 500, error.message);
     }
 }
 
 const postExpenses =async ({ expense, expense_disc, category, userId }, res) => {
 
+    let transactions;
+
     try {
-        const user = await AuthCheck.findByPk(userId);
+        transactions = await db.transaction();
+
+        const user = await AuthCheck.findByPk(userId, {transactions});
 
         if(!user) {
+            await transactions.rollback();
             return sendErrorResp(res, 404, 'User not found!');
         }
 
@@ -139,23 +160,29 @@ const postExpenses =async ({ expense, expense_disc, category, userId }, res) => 
             expense,
             expense_disc,
             category,
-        });
+        }, {transactions});
 
         await updateUsersTotalExpense({ userId }, res);
 
+        await transactions.commit();
         return sendSuccessResp(res, 201, 'New expense added!', newExpense);
 
     } catch(error) {
+        await transactions.rollback();
         return sendErrorResp(res, 500, error.message);
     }
 }
 
 const deleteExpense =async ({ expenseId, userId }, res) => {
 
+    let transactions;
+
     try {
-        const user = await AuthCheck.findByPk(userId);
+        transactions = await db.transaction();
+        const user = await AuthCheck.findByPk(userId, {transactions});
 
         if(!user) {
+            await transactions.rollback();
             return sendErrorResp(res, 404, 'User not found!');
         }
 
@@ -164,18 +191,21 @@ const deleteExpense =async ({ expenseId, userId }, res) => {
                 expenseId,
                 userId
             }
-        });
+        }, {transactions});
 
         if(!expense) {
+            await transactions.rollback();
             return sendErrorResp(res, 404, 'Expense not found!');
         }
 
         await expense.destroy();
         await updateUsersTotalExpense({ userId }, res);
 
+        await transactions.commit();
         return sendSuccessResp(res, 200, 'Expense deleted successfully!');
 
     } catch(error) {
+        await transactions.rollback();
         return sendErrorResp(res, 500, error.message);
     }
 }
