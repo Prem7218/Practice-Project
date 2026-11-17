@@ -2,7 +2,7 @@
 const { sendErrorResp, sendSuccessResp } = require('../utils/response');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { AuthCheck } = require('../models/relation_models/relation');
+const { AuthCheck, ForgotPasswordRequests } = require('../models/relation_models/relation');
 
 const getAllUsers = async (res) => {
 
@@ -19,9 +19,19 @@ const getAllUsers = async (res) => {
     }
 }
 
-const getUpdatePassword =async ({ updatedPassword, email }, res) => {
+const getUpdatePassword =async ({ updatedPassword, email, id }, res) => {
 
     try {
+        const user = await ForgotPasswordRequests.findByPk(id);
+
+        if(!user) {
+            return sendErrorResp(res, 401, 'User not found, invalid link');
+        }
+
+        if(!user.isactive) {
+            return sendErrorResp(res, 401, 'link is expire now, resend new mail!');
+        }
+
         const hashedPassword = await bcrypt.hash(updatedPassword, 10);
 
         await AuthCheck.update({
@@ -29,6 +39,14 @@ const getUpdatePassword =async ({ updatedPassword, email }, res) => {
         }, {
             where: {
                 email
+            }
+        });
+
+        await ForgotPasswordRequests.update({
+            isactive: false
+        }, {
+            where: {
+                id
             }
         });
 

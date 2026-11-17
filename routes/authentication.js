@@ -5,9 +5,9 @@ const authController = require('../controllers/authenticationController');
 
 router.get('/', authController.loadAuthPage);
 router.post('/', authController.verifyUser);
-router.put('/', authController.updatePassword);
+router.put('/update/:id', authController.updatePassword);
 
-router.get('/forget', authController.loadUpdatePage);
+router.get('/forget/resetpassword/:id', authController.loadUpdatePage);
 
 router.get('/auth/users', authController.allUsers);
 

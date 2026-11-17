@@ -16,6 +16,7 @@ const allUsers = (req, res) => {
 }
 
 const updatePassword = (req, res) => {
+    const id = req.params.id;
     const { updatedPassword, email } = req.body;
 
     if(
@@ -27,7 +28,8 @@ const updatePassword = (req, res) => {
 
     return authService.getUpdatePassword({
         updatedPassword: updatedPassword.trim(), 
-        email: email.trim()
+        email: email.trim(),
+        id
     }, res);
 }
 

@@ -66,7 +66,6 @@ form.addEventListener('submit',async (e) => {
         output.innerText = error.message;
     }
     finally {
-
         submitButton.disabled = false;
     }
 });

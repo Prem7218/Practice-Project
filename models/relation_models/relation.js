@@ -2,6 +2,7 @@
 const AuthCheck = require('../authModel');
 const Expense = require('../expenseModel');
 const Payment = require('../paymentModel');
+const ForgotPasswordRequests = require('../forgetPassReqModel');
 
 AuthCheck.hasMany(Expense, {
     foreignKey: 'userId',
@@ -28,8 +29,19 @@ Payment.belongsTo(AuthCheck, {
     as: 'user'
 });
 
+AuthCheck.hasMany(ForgotPasswordRequests, {
+    foreignKey: 'userId',
+    as: 'forgets'
+});
+
+ForgotPasswordRequests.belongsTo(AuthCheck, {
+    foreignKey: 'userId',
+    as: 'user'
+})
+
 module.exports = {
     AuthCheck,
     Expense,
-    Payment
+    Payment,
+    ForgotPasswordRequests
 }
