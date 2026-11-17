@@ -3,6 +3,10 @@ const host = 'http://localhost:5000';
 const end_point = 'expense/data';
 let id = null;
 
+const recordsPerPage = 2;
+let currentPage = 1;
+let expenses = [];
+
 const form = document.getElementById('form');
 const ul = document.getElementById('output');
 const usersList = document.getElementById('users');
@@ -10,6 +14,7 @@ const usersList = document.getElementById('users');
 const expense = document.getElementById('expense');
 const description = document.getElementById('description');
 const category = document.getElementById('category');
+const pagination = document.getElementById('pagination');
 
 const submit = document.getElementById('submitBtn');
 const output = document.getElementById('message');
@@ -18,6 +23,128 @@ const logout = document.getElementById('logoutBtn');
 logout.addEventListener('click', () => {
     sessionStorage.removeItem('user');
     window.location.href = 'http://localhost:5000';
+});
+
+function displayExpenses() {
+
+    const totalPages = Math.max(
+        1,
+        Math.ceil(expenses.length / recordsPerPage)
+    );
+
+    currentPage = Math.min(currentPage, totalPages);
+
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const endIndex = startIndex + recordsPerPage;
+
+    const currentExpenses = expenses.slice(
+        startIndex,
+        endIndex
+    );
+
+    ul.innerHTML = '';
+
+    if (expenses.length === 0) {
+        ul.innerHTML = '<li>No expenses found!</li>';
+    }
+
+    currentExpenses.forEach(item => {
+
+        const {
+            category,
+            expense,
+            expenseId,
+            expense_disc
+        } = item;
+
+        const li = createList();
+
+        const htmlTemplate = `
+            <p id="${expenseId}">
+                <span class="${category}">${category}</span> -
+                <span>${expense_disc}</span> -
+                <span>₹${expense}</span>
+            </p>
+        `;
+
+        li.innerHTML = htmlTemplate;
+
+        li.append(addBtn('delete-bookmark'));
+        li.append(addBtn('edit-bookmark'));
+
+        ul.append(li);
+    });
+
+    const showingFrom = expenses.length === 0
+        ? 0
+        : startIndex + 1;
+
+    const showingTo = Math.min(
+        endIndex,
+        expenses.length
+    );
+
+    // Create pagination buttons
+    pagination.innerHTML = `
+        <p>
+            Showing ${showingFrom}-${showingTo}
+            of ${expenses.length} expenses
+        </p>
+
+        <button data-page="first"
+            ${currentPage === 1 ? 'disabled' : ''}>
+            First
+        </button>
+
+        <button data-page="previous"
+            ${currentPage === 1 ? 'disabled' : ''}>
+            Previous
+        </button>
+
+        <span>Page ${currentPage} of ${totalPages}</span>
+
+        <button data-page="next"
+            ${currentPage === totalPages ? 'disabled' : ''}>
+            Next
+        </button>
+
+        <button data-page="last"
+            ${currentPage === totalPages ? 'disabled' : ''}>
+            Last
+        </button>
+    `;
+}
+
+// Handle pagination clicks
+pagination.addEventListener('click', (event) => {
+
+    const action = event.target.dataset.page;
+
+    switch (action) {
+
+        case 'first':
+            currentPage = 1;
+            break;
+
+        case 'previous':
+            currentPage--;
+            break;
+
+        case 'next':
+            currentPage++;
+            break;
+
+        case 'last':
+            currentPage = Math.ceil(
+                expenses.length / recordsPerPage
+            );
+            break;
+
+        default:
+            return;
+    }
+
+    displayExpenses();
 });
 
 function createList() {
@@ -41,12 +168,6 @@ function addBtn(check) {
 
     return btn;
 }
-
-// async function updateExpense() {
-//     await axios.put(`${host}/${end_point}`, {
-//         userId: sessionStorage.getItem('user')
-//     });
-// }
 
 async function loadContent() {
 
@@ -95,27 +216,11 @@ async function loadContent() {
             usersList.append(li);
         }
 
-        for(let item of resp.data?.data) {
+        // Store all expenses received from backend
+        expenses = resp.data?.data || [];
 
-            const { 
-                category, 
-                expense, 
-                expenseId,
-                expense_disc,
-            } = item;
-
-            const li = createList();
-
-            const htmlTemplate = `<p id="${expenseId}"><span class="${category}">${category}</span> - <span class="${expense_disc}">${expense_disc}</span> - <span class="${expense}">${expense}</span></p>`;
-
-            li.innerHTML = htmlTemplate;
-
-            li.append(addBtn('delete-bookmark'));
-            li.append(addBtn('edit-bookmark'));
-
-            ul.append(li);
-
-        }
+        // Render current page
+        displayExpenses();
 
     } catch(error) {
         console.log(error);
@@ -138,6 +243,7 @@ form.addEventListener('submit',async (e) => {
             output.innerText = 'Please login first!';
             alert('Please login first!');
             window.location.href = 'http://localhost:5000/';
+            return ;
         }
 
         const newExpense = {
@@ -181,7 +287,10 @@ form.addEventListener('submit',async (e) => {
         submit.textContent= 'Add Expense';
 
         await loadContent();
-        // await updateExpense();
+
+        if (!id) {
+            currentPage = 1;
+        }
 
         setTimeout(() => {
             output.innerText = '';
@@ -223,7 +332,6 @@ ul.addEventListener('click', async (event) => {
             submit.textContent= 'Update';
 
             await loadContent();
-            // await updateExpense();
         }
 
         if(event.target.classList.contains('delete-bookmark')) {
@@ -236,7 +344,6 @@ ul.addEventListener('click', async (event) => {
             });
 
             await loadContent();
-            // await updateExpense();
         }
 
     } catch(error) {
