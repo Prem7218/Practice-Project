@@ -13,6 +13,12 @@ const category = document.getElementById('category');
 
 const submit = document.getElementById('submitBtn');
 const output = document.getElementById('message');
+const logout = document.getElementById('logoutBtn');
+
+logout.addEventListener('click', () => {
+    sessionStorage.removeItem('user');
+    window.location.href = 'http://localhost:5000';
+});
 
 function createList() {
     const li = document.createElement('li');

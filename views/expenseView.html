@@ -153,10 +153,25 @@
         /* Header */
         .page-header {
             margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
         }
 
         .page-header h1 {
             margin-bottom: 8px;
+        }
+
+        .logout-button {
+            width: auto;
+            flex-shrink: 0;
+            padding: 9px 16px;
+            background: #4b5563;
+        }
+
+        .logout-button:hover {
+            background: #374151;
         }
 
         /* Two Column Layout */
@@ -262,6 +277,10 @@
 
         /* Responsive Design */
         @media (max-width: 700px) {
+            .page-header {
+                align-items: center;
+            }
+
             .dashboard-layout {
                 grid-template-columns: 1fr;
             }
@@ -275,8 +294,11 @@
 <body>
     <main class="expense-card">
         <header class="page-header">
-            <h1>Expense Dashboard</h1>
-            <p class="intro">Manage expenses and track user spending.</p>
+            <div>
+                <h1>Expense Dashboard</h1>
+                <p class="intro">Manage expenses and track user spending.</p>
+            </div>
+            <button class="logout-button" id="logoutBtn" type="button">Logout</button>
         </header>
 
         <div class="dashboard-layout">
