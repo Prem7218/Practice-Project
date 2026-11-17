@@ -289,6 +289,37 @@
                 padding: 20px;
             }
         }
+
+        #pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        #pagination button {
+            padding: 9px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        #pagination button:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        #pagination button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        #pagination span {
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -372,6 +403,7 @@
         <section class="expense-list-section">
             <h2>Recent Expenses</h2>
             <ul id="output"></ul>
+            <div id="pagination"></div>
         </section>
     </main>
 
