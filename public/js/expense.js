@@ -3,7 +3,7 @@ const host = 'http://localhost:5000';
 const end_point = 'expense/data';
 let id = null;
 
-const recordsPerPage = 2;
+const pageSize = document.getElementById('pageSize');
 let currentPage = 1;
 let expenses = [];
 
@@ -20,12 +20,23 @@ const submit = document.getElementById('submitBtn');
 const output = document.getElementById('message');
 const logout = document.getElementById('logoutBtn');
 
+function getRecordsPerPage() {
+    return Number(pageSize.value);
+}
+
 logout.addEventListener('click', () => {
     sessionStorage.removeItem('user');
     window.location.href = 'http://localhost:5000';
 });
 
-function displayExpenses() {
+pageSize.addEventListener('change', () => {
+    currentPage = 1;
+    displayExpenses(getRecordsPerPage());
+});
+
+function displayExpenses(recordsPerPage) {
+
+    recordsPerPage = Number(recordsPerPage);
 
     const totalPages = Math.max(
         1,
@@ -59,7 +70,7 @@ function displayExpenses() {
 
         const li = createList();
 
-        const htmlTemplate = `
+        li.innerHTML = `
             <p id="${expenseId}">
                 <span class="${category}">${category}</span> -
                 <span>${expense_disc}</span> -
@@ -67,10 +78,10 @@ function displayExpenses() {
             </p>
         `;
 
-        li.innerHTML = htmlTemplate;
-
-        li.append(addBtn('delete-bookmark'));
-        li.append(addBtn('edit-bookmark'));
+        li.append(
+            addBtn('delete-bookmark'), 
+            addBtn('edit-bookmark')
+        );
 
         ul.append(li);
     });
@@ -119,6 +130,10 @@ function displayExpenses() {
 pagination.addEventListener('click', (event) => {
 
     const action = event.target.dataset.page;
+    const totalPages = Math.max(
+        1,
+        Math.ceil(expenses.length / getRecordsPerPage())
+    );
 
     switch (action) {
 
@@ -135,16 +150,14 @@ pagination.addEventListener('click', (event) => {
             break;
 
         case 'last':
-            currentPage = Math.ceil(
-                expenses.length / recordsPerPage
-            );
+            currentPage = totalPages;
             break;
 
         default:
             return;
     }
 
-    displayExpenses();
+    displayExpenses(getRecordsPerPage());
 });
 
 function createList() {
@@ -220,7 +233,7 @@ async function loadContent() {
         expenses = resp.data?.data || [];
 
         // Render current page
-        displayExpenses();
+        displayExpenses(getRecordsPerPage());
 
     } catch(error) {
         console.log(error);
@@ -286,11 +299,11 @@ form.addEventListener('submit',async (e) => {
         submit.disabled = false;
         submit.textContent= 'Add Expense';
 
-        await loadContent();
-
         if (!id) {
             currentPage = 1;
         }
+
+        await loadContent();
 
         setTimeout(() => {
             output.innerText = '';

@@ -163,6 +163,19 @@
             margin-bottom: 8px;
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .page-size-select {
+            width: auto;
+            min-width: 72px;
+            padding: 9px 30px 9px 12px;
+        }
+
         .logout-button {
             width: auto;
             flex-shrink: 0;
@@ -208,9 +221,35 @@
             list-style: none;
             padding: 0;
             margin: 0;
+
             display: flex;
             flex-direction: column;
             gap: 12px;
+
+            max-height: 250px;
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            padding-right: 6px;
+        }
+
+        /* Custom Scrollbar */
+        #users::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        #users::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #users::-webkit-scrollbar-thumb {
+            background: #9ca3af;
+            border-radius: 10px;
+        }
+
+        #users::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
         }
 
         .user-item {
@@ -292,20 +331,40 @@
 
         #pagination {
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
+            width: 100%;
             margin: 25px 0;
         }
 
+        /* Expense Count */
+        #pagination p {
+            flex-basis: 100%;
+            text-align: center;
+            margin: 0 0 5px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* Pagination Buttons */
         #pagination button {
-            padding: 9px 16px;
+            width: auto;
+            flex: 1 1 auto;
+            min-width: 65px;
+            max-width: 110px;
+            padding: 9px 12px;
+
             border: none;
             border-radius: 6px;
             background: #2563eb;
             color: white;
+
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         #pagination button:hover:not(:disabled) {
@@ -314,11 +373,51 @@
 
         #pagination button:disabled {
             background: #aaa;
+            opacity: 0.7;
             cursor: not-allowed;
         }
 
+        /* Current Page */
         #pagination span {
+            flex: 0 0 auto;
+            font-size: 14px;
             font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Tablet */
+        @media (max-width: 700px) {
+            #pagination {
+                gap: 7px;
+            }
+
+            #pagination button {
+                padding: 9px 8px;
+                font-size: 13px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            #pagination {
+                gap: 5px;
+            }
+
+            #pagination button {
+                flex: 1 1 0;
+                min-width: 0;
+                max-width: none;
+                padding: 9px 3px;
+                font-size: 11px;
+            }
+
+            #pagination span {
+                font-size: 11px;
+            }
+
+            #pagination p {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -329,7 +428,19 @@
                 <h1>Expense Dashboard</h1>
                 <p class="intro">Manage expenses and track user spending.</p>
             </div>
-            <button class="logout-button" id="logoutBtn" type="button">Logout</button>
+
+            <div class="header-actions">
+                <select class="page-size-select" id="pageSize" name="pageSize" aria-label="Expenses per page">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                </select>
+                <button class="logout-button" id="logoutBtn" type="button">Logout</button>
+            </div>
         </header>
 
         <div class="dashboard-layout">
